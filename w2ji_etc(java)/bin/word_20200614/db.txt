@@ -1,0 +1,26 @@
+CREATE TABLE w_member
+(
+    `seq`      INT            NOT NULL    AUTO_INCREMENT COMMENT '고유번호', 
+    `m_id`     VARCHAR(45)    NOT NULL    COMMENT '회원id', 
+    `m_pw`     VARCHAR(45)    NOT NULL    COMMENT '비밀번호', 
+    `m_name`   VARCHAR(45)    NOT NULL    COMMENT '이름', 
+    `m_email`  VARCHAR(45)    NOT NULL    COMMENT '이메일', 
+    `c_date`   DATE           NOT NULL    COMMENT '생성일시', 
+    PRIMARY KEY (seq)
+);
+
+ALTER TABLE w_member COMMENT '회원테이블';
+
+CREATE TABLE w_word
+(
+    `seq`       INT             NOT NULL    AUTO_INCREMENT COMMENT '고유번호', 
+    `m_id`      VARCHAR(45)     NOT NULL    COMMENT '회원id', 
+    `w_spell`   VARCHAR(100)    NOT NULL    COMMENT '스펠링', 
+    `w_mean`    VARCHAR(45)     NOT NULL    COMMENT '뜻', 
+    `wr_count`  INT             NOT NULL    COMMENT '틀린횟수', 
+    `type`      VARCHAR(45)     NOT NULL    COMMENT '구분', 
+    `c_date`    DATE            NOT NULL    COMMENT '생성일', 
+    PRIMARY KEY (seq)
+);
+
+ALTER TABLE w_word COMMENT '단어장';
