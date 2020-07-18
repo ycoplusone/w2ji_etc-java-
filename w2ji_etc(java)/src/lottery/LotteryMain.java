@@ -52,6 +52,8 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     JButton send_btn;
     
     String str ="";
+    
+    String id = "";
 	
 	
 	   public LotteryMain() {		   
@@ -75,7 +77,9 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        JTextField lab2 = new JTextField("회차가 없습니다.");
 	        lab2.setEditable(false);
 	        lab2.setBounds(20, 55, 350, 20); // x , y , w , h
-	        lab2.setText(   getLotteryInfo() );
+	        String aa[] = getLotteryInfo();
+	        id = aa[1]; // 이번 회차 id값
+	        lab2.setText(   aa[0] );
 	        
 	        
 	        
@@ -207,7 +211,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			   Boolean chk = checkNumber( num1.getText() , num2.getText() , num3.getText() , num4.getText() , num5.getText() , num6.getText()  );
 			   
 			   String param = "";
-			   param+="id=1";
+			   param+="id="+id;
 			   param+="&nick="+nick_name.getText();
 			   param+="&num1="+ num1.getText();
 			   param+="&num2="+ num2.getText();
@@ -254,7 +258,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	   
 
 	   // start - 회차 정보 가져오기
-	   public String getLotteryInfo(){
+	   public String[] getLotteryInfo(){
 		   StringBuilder sb = new StringBuilder();
 			try {
 				URL url = new URL("http://localhost:8080/w2ji_web/lottery/thislottery.jsp");
@@ -290,7 +294,10 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			}
 			JsonParser Parser = new JsonParser();
 			JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());
-			return jsonObj.get("txt").toString().replace("\"", "");
+			String txt[] = new String[2];
+			txt[0] = jsonObj.get("txt").toString().replace("\"", "");
+			txt[1] = jsonObj.get("id").toString().replace("\"", "");
+			return txt;
 	   }// end - 회차 정보 가져오기
 	        
    
