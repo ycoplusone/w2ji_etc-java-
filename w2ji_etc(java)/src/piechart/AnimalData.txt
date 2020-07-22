@@ -1,0 +1,7 @@
+Tiger Populations
+India,2967
+Rusia,480
+Myanmar,85
+South Korea,30
+Nepal,235
+Bhutan,103
