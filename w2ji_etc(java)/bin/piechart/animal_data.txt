@@ -1,0 +1,9 @@
+Tanzania,3600
+Nigeria,1470
+congo,946
+south africa,2800
+mozambique,2375
+france,120
+north korea,3700
+australia,2300
+india,1900
