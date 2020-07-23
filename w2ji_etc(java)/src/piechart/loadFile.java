@@ -43,10 +43,12 @@ public class loadFile {
 	        	   }
 	        	   
 	           }
+       
 	    }catch (FileNotFoundException e) {	
 	    }catch(IOException e){
 	        System.out.println(e);
 	    }
+	    
     
 	}	
 
