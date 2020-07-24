@@ -1,0 +1,65 @@
+-- 이번 회차 당첨 번호 리스트
+select
+a.id , a.title , a.d_day 
+, case when a.use_yn = 'c' then a.num1 else '' end num1
+, case when a.use_yn = 'c' then a.num2 else '' end num2
+, case when a.use_yn = 'c' then a.num3 else '' end num3
+, case when a.use_yn = 'c' then a.num4 else '' end num4
+, case when a.use_yn = 'c' then a.num5 else '' end num5
+, case when a.use_yn = 'c' then a.num6 else '' end num6
+from lottery_info a
+where a.id = ( select max(id)  from lottery_info  )
+;
+
+-- 당첨자 리스트
+select
+  b.nick_nm
+, b.num1
+, case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num1_chk
+, b.num2
+, case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num2_chk
+, b.num3
+, case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num3_chk
+, b.num4
+, case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num4_chk
+, b.num5
+, case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num5_chk
+, b.num6
+, case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num6_chk
+ , (case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+ + case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+ + case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+ + case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+ + case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+ + case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ) as cnt
+from lottery_info a
+join user_lottery b on ( a.id = b.info_id )
+where 1=1
+and a.id = ( select max(id)  from lottery_info  )
+and a.use_yn ='c'
+;
+
+
+
+
+-- 담첨 요약
+select
+a.cnt , count(1)
+from 
+(
+    select
+     case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num6_chk
+     , (case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+     + case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+     + case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+     + case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+     + case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end
+     + case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ) as cnt
+    from lottery_info a
+    join user_lottery b on ( a.id = b.info_id )
+    where 1=1
+    and a.id = ( select max(id)  from lottery_info  )
+    and a.use_yn ='c'
+) a
+group by a.cnt
+

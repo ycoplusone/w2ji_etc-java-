@@ -1,5 +1,6 @@
 package lottery;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,6 +16,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -43,6 +46,7 @@ import word_20200614.WordDbConnect;
 
 public class LotteryMain extends JFrame  implements ActionListener , KeyListener {
 
+	String url_base = "http://tjs828912.cafe24.com/";
 	SendPost sp = new SendPost();
 	
     JButton logBtn;
@@ -65,6 +69,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     String notice_txt = "";
     
     JButton send_btn;
+    
     
     String str ="";
     
@@ -259,7 +264,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 					hm.put("num4"	,num4.getText() );
 					hm.put("num5"	,num5.getText() );
 					hm.put("num6"	,num6.getText() );
-					String url = "http://localhost:8080/w2ji_web/userlotteradd";
+					String url = url_base+"/userlotteradd";
 					String temp = sp.postRequest(url , hm);
 					JsonParser Parser = new JsonParser();
 					JsonObject jsonObj = (JsonObject) Parser.parse(temp);
@@ -286,7 +291,18 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			   }
 			   
 		   }else if( e.getSource() == notice_btn ){
-			   JOptionPane.showMessageDialog(null, notice_txt);
+			   //JOptionPane.showMessageDialog(null, notice_txt);
+			   try {
+				   Desktop.getDesktop().browse(new URI(url_base+"/lottery/usernotice.jsp"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			   
+
 		   }else {
 			   
 		   }
@@ -337,7 +353,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	   public String[] getLotteryInfo(){
 		   StringBuilder sb = new StringBuilder();
 			try {
-				URL url = new URL("http://localhost:8080/w2ji_web/thislottery");
+				URL url = new URL(url_base+"/thislottery");
 				HttpURLConnection con = (HttpURLConnection) url.openConnection();
 				con.setConnectTimeout(5000); //서버에 연결되는 Timeout 시간 설정
 				con.setReadTimeout(5000); // InputStream 읽어 오는 Timeout 시간 설정
@@ -444,7 +460,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		HashMap hm = new HashMap<String, String>();
 		hm.put("id"		, _id);
 		hm.put("nick"	, _name );
-		String url = "http://localhost:8080/w2ji_web/mylottery";
+		String url = url_base+"/mylottery";
 		String temp = sp.postRequest(url , hm);
 		JsonParser Parser = new JsonParser();
 		JsonObject jsonObj = (JsonObject) Parser.parse(temp);
@@ -462,7 +478,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 
 	public void getPastLotteryInfo() {		
 		HashMap hm = new HashMap<String, String>();
-		String url = "http://localhost:8080/w2ji_web/pastlottery";
+		String url = url_base+"/pastlottery";
 		//String test = postRequest(url , hm);
 		String temp = sp.postRequest(url , hm);
 		JsonParser Parser = new JsonParser();
