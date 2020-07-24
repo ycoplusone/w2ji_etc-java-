@@ -384,13 +384,23 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			} catch (Exception e){
 				System.err.println(e.toString());
 			}
-			JsonParser Parser = new JsonParser();
-			JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());
 			String txt[] = new String[4];
-			txt[0] = jsonObj.get("txt").toString().replace("\"", "");
-			txt[1] = jsonObj.get("id").toString().replace("\"", "");
-			txt[2] = jsonObj.get("title").toString().replace("\"", "");
-			txt[3] = jsonObj.get("d_day").toString().replace("\"", "");
+			txt[0] = "";
+			txt[1] = "";
+			txt[2] = "";
+			txt[3] = "";
+			try {
+				JsonParser Parser = new JsonParser();
+				JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());				
+				txt[0] = jsonObj.get("txt").toString().replace("\"", "");
+				txt[1] = jsonObj.get("id").toString().replace("\"", "");
+				txt[2] = jsonObj.get("title").toString().replace("\"", "");
+				txt[3] = jsonObj.get("d_day").toString().replace("\"", "");				
+			} catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, "진행중인 회차가 없습니다.");
+			}
+			
 			return txt;
 	   }// end - 회차 정보 가져오기
 	        
