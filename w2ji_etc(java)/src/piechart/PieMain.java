@@ -1,6 +1,10 @@
 package piechart;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,7 +18,7 @@ import javax.swing.JFrame;
 
 
 
-public class PieMain {
+public class PieMain{
 	
 	
 	public static void main(String[] argv) {
@@ -22,27 +26,22 @@ public class PieMain {
 		System.out.println("read file");
 		loadFile lf = new loadFile();
 		
-		;
-		
-		
-		for (DataModel dataModel : lf.dm) {
-			System.out.println( "dataModel : "+dataModel.getName()+" , "+dataModel.getColor() )  ;
-		}
-		
-		
-		PieChart pc = new PieChart( lf.dm );
-			
-		
 		JFrame fr = new JFrame();
-		fr.setTitle( lf.title );
+		/*
+		fr.addComponentListener(new ComponentAdapter(){  
+		       public void componentResized(ComponentEvent evt) {
+		           Component c = (Component)evt.getSource();
+		           //update your view/canvas
+		           System.out.println("asdfasdf");
+		       }
+		});
+		*/
+		PieChart pc = new PieChart( lf.dm  , lf.title );		
+		fr.setTitle( "this is pie chart" );
 		fr.getContentPane().add( pc );
 		fr.setSize(700, 500);
 		fr.setVisible(true);
-		
-		
 	}
-	
-
 	
 }
 

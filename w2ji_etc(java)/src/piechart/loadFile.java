@@ -26,7 +26,7 @@ public class loadFile {
 	    	 br = Files.newBufferedReader(Paths.get( path +"AnimalData.txt" ));
 	    	 String line = "";
 	           while((line = br.readLine()) != null){
-	        	   System.out.println("line  : "+line);
+	        	   //System.out.println("line  : "+line);
 	        	   if(title.equals("")) {
 	        		   title = line;
 	        	   }else {
