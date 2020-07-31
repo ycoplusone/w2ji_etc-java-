@@ -46,7 +46,8 @@ import word_20200614.WordDbConnect;
 
 public class LotteryMain extends JFrame  implements ActionListener , KeyListener {
 
-	String url_base = "http://tjs828912.cafe24.com/";
+	//String url_base = "http://tjs828912.cafe24.com/";//http://localhost:8080/w2ji_web/
+	String url_base = "http://localhost:8080/w2ji_web/";
 	SendPost sp = new SendPost();
 	
     JButton logBtn;

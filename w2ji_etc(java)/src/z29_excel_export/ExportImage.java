@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,25 +19,56 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import piechart.loadFile;
+
 
 public class ExportImage extends JPanel{
     
     
     List<BookVo> _lb = new ArrayList<BookVo>();
     ArrayList<File> list_img = new ArrayList<File>();
+    
+    ArrayList<File> detail_img = new ArrayList<File>();
+    
+    ArrayList<File> big_img = new ArrayList<File>();
+    
     String currentDate ="";
     int _size = 0;
     
+	Font f1 = new Font("맑은 고딕", Font.PLAIN, 12);
+	Color c1 = new Color(0, 112, 192);
+	
+	Font f2 = new Font("맑은 고딕", Font.BOLD, 15);	//빨간 큰		
+	Color c2 = new Color(255, 0, 0);
+	
+	Font f3 = new Font("맑은 고딕", Font.BOLD, 15);		
+	Color c3 = new Color(112, 48, 160);
+    
+    
+	// 배포용
+	String path =  ".\\";	
+	// 로컬 실행용
+	//String path =  ExportImage.class.getResource("").getPath().substring(1);
+    
     ExportImage( List<BookVo> lb , String file){
     	this._lb = lb;
+    	
 		for( File info : new File(file).listFiles() ) {
 			list_img.add( info );
 		}
-		_size = (int)(lb.size() / 2)  * 450;
-		System.out.println( lb.size()+" : "+_size);
-		//System.out.println( getName(list_img.get(0).getName()) );
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+		for( File f : new File("c:\\mk_book_list\\Detail").listFiles() ) {
+			detail_img.add( f );
+		}
+		
+		for( File f : new File("c:\\mk_book_list\\BigThumb").listFiles() ) {
+			big_img.add( f );
+		}
+		
+		_size = (int)(lb.size() / 2)  * 450;
+
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		currentDate = dateFormat.format(new Date());
     } 
     
@@ -67,7 +99,7 @@ public class ExportImage extends JPanel{
 				}
 				
 			}
-			ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"_img.jpg"));
+			ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\전체합본.jpg"));
 			
 			
 		} catch (Exception e) {			
@@ -80,35 +112,72 @@ public class ExportImage extends JPanel{
 		BufferedImage bi = null;
 		BufferedImage cover = null;
 		Image resizeImage = null;
-		//File ff = new File(".\\src\\z29_excel_export\\");
-		String path =  ".\\";//ExportImage.class.getResource("").getPath();//new File(".").getAbsolutePath();//this.getClass().getResource("").toString();
-		System.out.println("path : "+path);
-		Font f1 = new Font("", Font.PLAIN, 12);
-		Color c1 = new Color(0, 112, 192);
 		
-		Font f2 = new Font("", Font.BOLD, 15);	//빨간 큰		
-		Color c2 = new Color(255, 0, 0);
+		BufferedImage bi1 = null;
+		BufferedImage cover1 = null;
+		Image resizeImage1 = null;
 		
-		Font f3 = new Font("", Font.BOLD, 15);		
-		Color c3 = new Color(112, 48, 160);
+		BufferedImage bi_d = null;
+		
+		
+
 		
 		int _x = 410;
 		try {			
+			System.out.println("isbn : "+bv.getIsbn());
 			for( File f  : list_img ) {
-				String file_name = getName(f.getName());
+				String file_name = getName(f.getName());								
 				if(file_name.equals(bv.getIsbn())) {
 					cover = ImageIO.read(new File( f.getPath()  ));
-					resizeImage = cover.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+					resizeImage = cover.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
 				}
 			}
 			
+			for( File f  : big_img ) {
+				String file_name = getName(f.getName());								
+				if(file_name.equals(bv.getIsbn())) {
+					cover1 = ImageIO.read(new File( f.getPath()  ));
+					resizeImage1 = cover1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
+				}
+			}
 			
-			System.out.println( cover.getHeight()+" : "+cover.getWidth() );
+			System.out.println(resizeImage == null?"null 이다":"정상이다.");
 			
-			bi = ImageIO.read(new File( path +"img_guide_s.png"  ));
+			bi = setImg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
 			Graphics2D graphics = (Graphics2D) bi.getGraphics();
 			graphics.setBackground(Color.white);
-			graphics.drawImage(bi, 0, 0, null);
+			graphics.drawImage(bi, 0, 0, null);			
+			graphics.drawImage(resizeImage , 20 , 95 , null);
+			
+			bi1 = setImg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
+			Graphics2D graphics1 = (Graphics2D) bi1.getGraphics();
+			graphics1.setBackground(Color.white);
+			graphics1.drawImage(bi1, 0, 0, null);			
+			graphics1.drawImage(resizeImage1 , 20 , 95 , null);
+			ImageIO.write(bi1, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+bv.getIsbn()+".jpg"));
+			
+			setImgDetail(bv);
+			
+			
+			
+			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return bi; 
+	}
+	
+	public BufferedImage setImg(BookVo bv) {
+		BufferedImage _bi = null;
+		
+		int _x = 410;
+		try {			
+			
+			_bi = ImageIO.read(new File( path +"img_guide_s.png"  ));
+			Graphics2D graphics = (Graphics2D) _bi.getGraphics();
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			graphics.setBackground(Color.white);
+			//graphics.drawImage(_bi, 0, 0, null);
 			
 			graphics.setColor( c3 );
 			graphics.setFont(f3);
@@ -126,6 +195,7 @@ public class ExportImage extends JPanel{
 			graphics.setFont(f2);
 			graphics.drawString( bv.getSale_amt() ,  _x ,  215 );
 			
+			
 			graphics.setColor( c1 );
 			graphics.setFont(f1);
 			graphics.drawString( bv.getList_amt() ,  _x ,  282 );
@@ -134,14 +204,60 @@ public class ExportImage extends JPanel{
 			
 			graphics.drawString( bv.getPub_date() ,  _x ,  418 );
 			
-			graphics.drawImage(resizeImage , 20 , 95 , null);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
+		return _bi;		
+	}
+	
+	public BufferedImage setImgDetail(BookVo bv) {
+		BufferedImage _bi = null;
+		BufferedImage _bi1 = null;
+		
+		
+		try {			
 			
+			for( File f  : detail_img ) {
+				String file_name = getName(f.getName());								
+				if(file_name.equals(bv.getIsbn())) {
+					_bi = ImageIO.read(new File( f.getPath()  ));										
+				}
+			}	
+			
+			
+			_bi1 = ImageIO.read(new File( path +"detail_guide.png"  ));
+			
+			BufferedImage _temp = new BufferedImage( _bi.getWidth() , _bi.getHeight()+50, BufferedImage.TYPE_INT_RGB);
+			
+			Graphics2D graphics = (Graphics2D) _temp.getGraphics();
+			graphics.setBackground(Color.white);
+			
+			graphics.drawImage(_bi1, 0, 0, null);
+			graphics.drawImage(_bi, 0, 70, null);
+			
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			graphics.setColor( c3 );
+			graphics.setFont(f3);
+			graphics.drawString( bv.getSeq() ,  10 ,  55);
+			
+			graphics.setColor( c2 );
+			graphics.setFont(f2);
+			graphics.drawString( bv.getTitle() ,  30 ,  55);
+			
+			
+			
+			ImageIO.write(_temp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bv.getIsbn()+".jpg"));
+		
 			
 		} catch (IOException e) {			
 			e.printStackTrace();
 		}
-		return bi; 
+		
+		return _bi;
 	}
+	
+	
 	
 	
 	public String getName(String str) {

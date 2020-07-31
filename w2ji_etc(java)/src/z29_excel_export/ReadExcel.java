@@ -1,6 +1,7 @@
 package z29_excel_export;
 
 import java.io.FileInputStream;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,8 @@ public class ReadExcel {
                 			
                 		}
                 		
+                		DecimalFormat formatter = new DecimalFormat("#,###,###");
+                		
                 		if(col_index == 0) {
                 			double tmp = Double.parseDouble(value);
                 			String v = Integer.toString( (int)tmp );
@@ -77,16 +80,16 @@ public class ReadExcel {
                 		}else if( col_index == 3 ) {
                 			bv.setCompany(value);
                 		}else if( col_index == 4 ) {
-                			double tmp = Double.parseDouble(value);
-                			String v = Integer.toString( (int)tmp );
+                			double tmp = Double.parseDouble(value);                			
+                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
                 			bv.setCost_amt(v);
                 		}else if( col_index == 5 ) {
                 			double tmp = Double.parseDouble(value);
-                			String v = Integer.toString( (int)tmp );
+                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
                 			bv.setSale_amt(v);
                 		}else if( col_index == 6 ) {
                 			double tmp = Double.parseDouble(value);
-                			String v = Integer.toString( (int)tmp );                
+                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );                			
                 			bv.setList_amt( v );
                 		}else if( col_index == 11 ) {
                 			bv.setWriter(value);
