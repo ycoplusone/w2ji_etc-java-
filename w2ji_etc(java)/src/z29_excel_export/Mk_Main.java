@@ -31,6 +31,7 @@ public class Mk_Main {
 		//ExportExcel ee = new ExportExcel( lb ); 사용안함.
 		ExportImage ei = new ExportImage(  lb , dir_img);
 		ei.MakeImage();
+		//ei.Test();
 		/*
 		JFrame fr = new JFrame();
     	fr.setTitle( "그림입니다." );

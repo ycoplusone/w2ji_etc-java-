@@ -46,7 +46,7 @@ public class ExportImage extends JPanel{
     
     
 	// 배포용
-	String path =  ".\\";	
+	String path =  "c:\\mk_book_list\\";	
 	// 로컬 실행용
 	//String path =  ExportImage.class.getResource("").getPath().substring(1);
     
@@ -65,7 +65,7 @@ public class ExportImage extends JPanel{
 			big_img.add( f );
 		}
 		
-		_size = (int)(lb.size() / 2)  * 450;
+		_size = (int)(lb.size() / 2)  * 394;
 
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -75,16 +75,21 @@ public class ExportImage extends JPanel{
     public void paint(Graphics g){
     	//MakeImage((Graphics2D) g );	    
 	}	
+    
+    public void Test(){
+    	setImgjpg(_lb.get(0));
+    	
+    }
 	
 	public void MakeImage( ){
 		System.out.println("paint -- ");
-		//String path = ExportImage.class.getResource("").getPath().substring(1);
+		
 		boolean _chk = true;
 		int _h = 0;
 		try {
 			//base = MakeBaseImage( _lb.get(0));//ImageIO.read(new File( path +"img_guide_s.png"  ));
 			//g.drawImage( base , 0, _h, null);
-			BufferedImage base = new BufferedImage(1200, _size, BufferedImage.TYPE_INT_RGB);
+			BufferedImage base = new BufferedImage(900, _size, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = (Graphics2D) base.getGraphics();
 			g.setBackground(Color.white);
 			for(BookVo list : _lb) {
@@ -93,13 +98,13 @@ public class ExportImage extends JPanel{
 					g.drawImage( zzbase , 0, _h, null);
 					_chk = false;
 				}else {
-					g.drawImage( zzbase , 600 , _h, null);
+					g.drawImage( zzbase , 450 , _h, null);
 					_chk = true;
-					_h += 450;					
+					_h += 394;					
 				}
 				
 			}
-			ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\전체합본.jpg"));
+			ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\total_image.jpg"));
 			
 			
 		} catch (Exception e) {			
@@ -119,12 +124,10 @@ public class ExportImage extends JPanel{
 		
 		BufferedImage bi_d = null;
 		
-		
-
-		
 		int _x = 410;
 		try {			
 			System.out.println("isbn : "+bv.getIsbn());
+			/*
 			for( File f  : list_img ) {
 				String file_name = getName(f.getName());								
 				if(file_name.equals(bv.getIsbn())) {
@@ -140,21 +143,24 @@ public class ExportImage extends JPanel{
 					resizeImage1 = cover1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
 				}
 			}
+			*/
 			
 			System.out.println(resizeImage == null?"null 이다":"정상이다.");
 			
-			bi = setImg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
-			Graphics2D graphics = (Graphics2D) bi.getGraphics();
+			bi = setImgjpg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
+			/*Graphics2D graphics = (Graphics2D) bi.getGraphics();
 			graphics.setBackground(Color.white);
 			graphics.drawImage(bi, 0, 0, null);			
 			graphics.drawImage(resizeImage , 20 , 95 , null);
+			*/
 			
 			bi1 = setImg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
-			Graphics2D graphics1 = (Graphics2D) bi1.getGraphics();
+			/*Graphics2D graphics1 = (Graphics2D) bi1.getGraphics();
 			graphics1.setBackground(Color.white);
 			graphics1.drawImage(bi1, 0, 0, null);			
 			graphics1.drawImage(resizeImage1 , 20 , 95 , null);
 			ImageIO.write(bi1, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+bv.getIsbn()+".jpg"));
+			*/
 			
 			setImgDetail(bv);
 			
@@ -167,11 +173,89 @@ public class ExportImage extends JPanel{
 		return bi; 
 	}
 	
+
+	//img_guide_s.jpg
+	public BufferedImage setImgjpg(BookVo bv) {
+		BufferedImage _bi = null;
+		
+		BufferedImage bi = null;
+		BufferedImage cover = null;
+		Image resizeImage = null;
+		
+		int _x = 270;
+		try {			
+			
+			for( File f  : list_img ) {
+				String file_name = getName(f.getName());								
+				if(file_name.equals(bv.getIsbn())) {
+					cover = ImageIO.read(new File( f.getPath()  ));
+					resizeImage = cover.getScaledInstance(200, 200, Image.SCALE_SMOOTH);					
+				}
+			}
+			
+			_bi = ImageIO.read(new File( path +"img_guide_s.jpg"  ));
+			Graphics2D graphics = (Graphics2D) _bi.getGraphics();
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			graphics.setBackground(Color.white);
+			//graphics.drawImage(_bi, 0, 0, null);
+			
+			graphics.setColor( c3 );
+			graphics.setFont(f3);
+			graphics.drawString( bv.getSeq() ,  50 ,  17);
+			
+			graphics.setColor( c2 );
+			graphics.setFont(f2);
+			graphics.drawString( bv.getTitle() ,  100 ,  17);
+			
+			graphics.setColor( c1 );
+			graphics.setFont(f1);
+			graphics.drawString( bv.getIsbn() ,  _x ,  66);			
+			graphics.drawString( bv.getCompany() ,  _x ,  126);
+			
+			graphics.setColor( c2 );
+			graphics.setFont(f2);
+			graphics.drawString( bv.getSale_amt() ,  _x ,  187 );
+			
+			
+			graphics.setColor( c1 );
+			graphics.setFont(f1);
+			graphics.drawString( bv.getList_amt() ,  _x ,  246 );
+			
+			graphics.drawString( bv.getWriter() ,  _x ,  306 );
+			
+			graphics.drawString( bv.getPub_date() ,  _x ,  366 );
+			
+			graphics.drawImage(resizeImage , 4 , 110 , null);
+			
+			
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
+		return _bi;		
+	}
+	
+	
+	//img_guide_s.png
 	public BufferedImage setImg(BookVo bv) {
 		BufferedImage _bi = null;
 		
+		BufferedImage bi1 = null;
+		BufferedImage cover1 = null;
+		Image resizeImage1 = null;
+		
 		int _x = 410;
 		try {			
+			
+			for( File f  : big_img ) {
+				String file_name = getName(f.getName());								
+				if(file_name.equals(bv.getIsbn())) {
+					cover1 = ImageIO.read(new File( f.getPath()  ));
+					resizeImage1 = cover1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
+				}
+			}
+
+			
 			
 			_bi = ImageIO.read(new File( path +"img_guide_s.png"  ));
 			Graphics2D graphics = (Graphics2D) _bi.getGraphics();
@@ -203,6 +287,10 @@ public class ExportImage extends JPanel{
 			graphics.drawString( bv.getWriter() ,  _x ,  349 );
 			
 			graphics.drawString( bv.getPub_date() ,  _x ,  418 );
+			
+			graphics.drawImage(resizeImage1 , 20 , 95 , null);
+			
+			ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+bv.getIsbn()+".jpg"));
 			
 		} catch (IOException e) {			
 			e.printStackTrace();
