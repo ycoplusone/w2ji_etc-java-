@@ -121,7 +121,7 @@ public class SendPost {
             while ((str = reader.readLine()) != null) {
                 builder.append(str + "\n");
             }
-            myResult = builder.toString();
+            myResult = builder.toString();            
             return myResult;
 
         } catch (MalformedURLException e) {

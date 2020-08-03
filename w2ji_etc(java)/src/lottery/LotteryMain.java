@@ -46,8 +46,8 @@ import word_20200614.WordDbConnect;
 
 public class LotteryMain extends JFrame  implements ActionListener , KeyListener {
 
-	//String url_base = "http://tjs828912.cafe24.com/";//http://localhost:8080/w2ji_web/
-	String url_base = "http://localhost:8080/w2ji_web/";
+	//String url_base = "http://tjs828912.cafe24.com";
+	String url_base = "http://localhost:8080/w2ji_web";
 	SendPost sp = new SendPost();
 	
     JButton logBtn;
@@ -93,8 +93,8 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	   public LotteryMain() {		   
 		    this.setLayout(null);
 		   
-	        JLabel nick_lab = new JLabel("별 칭  : ");	 
-	        nick_lab.setBounds(20, 5, 50, 20); // x , y , w , h
+	        JLabel nick_lab = new JLabel("닉네임  : ");	 
+	        nick_lab.setBounds(20, 5, 60, 20); // x , y , w , h
 	        	        
 	        nick_name= new JTextField(10);
 	        nick_name.setBounds(70, 5, 130, 20); // x , y , w , h
@@ -183,7 +183,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		  
 		  this.add(jsp);
 		  
-	        notice_btn = new JButton("후원 정보 보기");
+	        notice_btn = new JButton("후원하기");
 	        notice_btn.addActionListener(this);
 	        notice_btn.setBounds(380, 5, 350, 90); // x , y , w , h
 	        this.add(notice_btn);	
@@ -405,6 +405,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			return txt;
 	   }// end - 회차 정보 가져오기
 	        
+	
 	public void id_load() {
 	    try{
 	        File file = new File("c:\\lottery_info\\info.dat");
@@ -420,14 +421,53 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        System.out.println(e);
 	    }
 	    String test = str.replace(" ", "");
-	    System.out.println(test+" : "+test.length());
-	    if( test.length() > 0) {
-	    	nick_name.setText( str );
-	    	id_chk = true;
+	    
+		HashMap hm = new HashMap<String, String>();		
+		hm.put("div"	, "id_check" );
+		hm.put("p1"	, str );
+		hm.put("p2"	, "" );
+		hm.put("p3"	, "" );
+		hm.put("p4"	, "" );
+		hm.put("p5"	, "" );
+		hm.put("p6"	, "" );
+		hm.put("p7"	, "" );
+		hm.put("p8"	, "" );
+		hm.put("p9"	, "" );
+		hm.put("p10", "" );
+		
+		String url = url_base+"/sql";
+		
+		
+		String temp = sp.postRequest(url , hm);
+		JsonParser Parser = new JsonParser();
+		JsonObject jsonObj = (JsonObject) Parser.parse(temp);
+		JsonArray memberArray = (JsonArray) jsonObj.get("list");
+		System.out.println(memberArray);
+		String [] ss = new String[100];
+		for (int i = 0; i < memberArray.size(); i++) {
+			JsonObject object = (JsonObject) memberArray.get(i);			
+			ss[0] = object.get("c0").toString().replace("\"", "");
+			ss[1] = object.get("c1").toString().replace("\"", "");
+		}    
+	    
+	    
+	    if( test.length() > 0) {	    	
+	    	if( ss[0].equals("1") ){
+	    		nick_name.setText( str );
+	    		nick_name.setEditable(false);
+	    		id_chk = true;
+	    	}else{
+	    		nick_name.setText( str );
+	    		nick_name.setEditable(true);
+	    		JOptionPane.showMessageDialog(null, "닉네임을 다시 등록 하셔야 합니다.");
+	    		id_chk = false;
+	    	}	    	
 	    }else {
 	    	JOptionPane.showMessageDialog(null, "별칭을 등록하셔야 합니다.");
 	    	id_chk = false;
 	    }
+	    
+	    
 	    
 	}
    
@@ -435,6 +475,31 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		   String fileName = "c:\\lottery_info\\info.dat" ;			   
 		   String path = "c:\\lottery_info"; //폴더 경로
 		   File Folder = new File(path);
+		   
+		   HashMap hm = new HashMap<String, String>();		
+			hm.put("div"	, "id_create" );
+			hm.put("p1"	, nick_name.getText() );
+			hm.put("p2"	, "" );
+			hm.put("p3"	, "" );
+			hm.put("p4"	, "" );
+			hm.put("p5"	, "" );
+			hm.put("p6"	, "" );
+			hm.put("p7"	, "" );
+			hm.put("p8"	, "" );
+			hm.put("p9"	, "" );
+			hm.put("p10", "" );			
+			String url = url_base+"/sql";
+			
+			
+			String temp = sp.postRequest(url , hm);
+			JsonParser Parser = new JsonParser();
+			JsonObject jsonObj = (JsonObject) Parser.parse(temp);
+			String aa = jsonObj.get("boolean").toString().replace("\"", "");
+			
+			
+			
+		   
+		   
 			// 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
 			if (!Folder.exists()) {
 				try{
@@ -451,12 +516,17 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	         file.delete();
 	         FileWriter fw = new FileWriter(file, true) ;
 	         String test = nick_name.getText().replace(" ", "");
-	         if( test.length() > 0 ) {
+	         if( test.length() > 0 && aa.equals("true") ) {
+	        	 JOptionPane.showMessageDialog(null, "닉네임이 등록되었습니다.");
 	        	 fw.write( nick_name.getText() );
+	        	 nick_name.setEditable(false);
 	        	 id_chk = true;
-	         }else {
-	        	JOptionPane.showMessageDialog(null, "다시 별칭을 등록하셔야 합니다.");
+	         }else if( aa.equals("false") ){
+	        	JOptionPane.showMessageDialog(null, "사용중인 닉네임입니다.");
 	 	    	id_chk = false;
+	         }else{
+	        	JOptionPane.showMessageDialog(null, "다시 별칭을 등록하셔야 합니다.");
+		 	    id_chk = false; 
 	         }
 	         
 	         
@@ -506,6 +576,9 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		notice_txt = jsonObj.get("notice").toString().replace("\"", "");
 	}
 	
+	public void fff(){
+		
+	}
 
    
 
