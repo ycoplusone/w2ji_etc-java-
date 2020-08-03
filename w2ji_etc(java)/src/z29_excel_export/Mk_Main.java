@@ -25,21 +25,13 @@ public class Mk_Main {
 		cf.mkdir( "c:\\mk_book_list\\"+currentDate );
 		
 		ReadExcel re = new ReadExcel();
-		List<BookVo> lb = re.Read("c:\\mk_book_list\\list.xlsx");
+		List<BookVo> lb = re.Read("c:\\mk_book_list\\");
 		
 			
 		//ExportExcel ee = new ExportExcel( lb ); 사용안함.
 		ExportImage ei = new ExportImage(  lb , dir_img);
 		ei.MakeImage();
 		//ei.Test();
-		/*
-		JFrame fr = new JFrame();
-    	fr.setTitle( "그림입니다." );
-		fr.getContentPane().add(ei );
-		fr.setSize(700, 500);
-		fr.setVisible(true);
-		//MakeImage();
-		*/
 		
 		
 		

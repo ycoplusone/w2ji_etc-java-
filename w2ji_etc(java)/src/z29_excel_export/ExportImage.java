@@ -72,99 +72,119 @@ public class ExportImage extends JPanel{
 		currentDate = dateFormat.format(new Date());
     } 
     
-    public void paint(Graphics g){
-    	//MakeImage((Graphics2D) g );	    
-	}	
     
     public void Test(){
-    	setImgjpg(_lb.get(0));
-    	
+    	//setImgjpg(_lb.get(0));    	
+    	setImgTitle(_lb.get(0).getFile_name() );
+    	setImgDetail( _lb.get(0).getFile_name() );
+    	setImgjpg( _lb.get(0).getFile_name() );
     }
 	
 	public void MakeImage( ){
-		System.out.println("paint -- ");
-		
-		boolean _chk = true;
-		int _h = 0;
+		System.out.println("Start - MakeImage");
 		try {
-			//base = MakeBaseImage( _lb.get(0));//ImageIO.read(new File( path +"img_guide_s.png"  ));
-			//g.drawImage( base , 0, _h, null);
-			BufferedImage base = new BufferedImage(900, _size, BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = (Graphics2D) base.getGraphics();
-			g.setBackground(Color.white);
-			for(BookVo list : _lb) {
-				BufferedImage zzbase = MakeBaseImage(list);//ImageIO.read(new File( path +"img_guide_s.png"  ));
-				if(_chk) {
-					g.drawImage( zzbase , 0, _h, null);
-					_chk = false;
-				}else {
-					g.drawImage( zzbase , 450 , _h, null);
-					_chk = true;
-					_h += 394;					
+			List<String> _ls = new ArrayList<String>();
+			String _str = "";
+			for( BookVo bv : _lb ){
+				if( !_str.equals( bv.getFile_name() ) ){
+					_str = bv.getFile_name();
+					_ls.add(_str);
+				}
+			}
+			
+			for( String str : _ls ){
+				setImgTitle( 	str );
+		    	setImgDetail( 	str );
+		    	setImgjpg( 		str );
+			}
+			
+			ArrayList<File> cru_dir = new ArrayList<File>();
+			
+			for( File f : new File("c:\\mk_book_list\\"+currentDate).listFiles() ) {
+				cru_dir.add( f );
+			}
+			
+			for(BookVo bb : _lb){
+				String he = "he"+bb.getIsbn();
+				String de = "de"+bb.getIsbn();
+				BufferedImage bi_he = null;
+				BufferedImage bi_de = null;
+				for( File f: cru_dir){
+					if( he.equals( getName(f.getName()) )  ){
+						bi_he = ImageIO.read(new File( f.getPath() ));
+					}
+					
+					if( de.equals( getName(f.getName()) ) ){
+						bi_de = ImageIO.read(new File( f.getPath() ));
+					}					
 				}
 				
+				if( bi_he != null && bi_de != null){
+					BufferedImage base = new BufferedImage(900, bi_he.getHeight() + bi_de.getHeight() , BufferedImage.TYPE_INT_RGB);
+					Graphics2D g = (Graphics2D) base.getGraphics();
+					g.setBackground(Color.white);
+					g.fillRect(0, 0, 900, bi_he.getHeight() + bi_de.getHeight());
+					
+					g.drawImage( bi_he , 0, 0, null);
+					g.drawImage( bi_de , 0, bi_he.getHeight(), null);				
+					ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bb.getIsbn()+".jpg"));
+				}		
+				
+							
+				
 			}
-			ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\total_image.jpg"));
 			
+			//삭제 루틴
+			for( File f : new File("c:\\mk_book_list\\"+currentDate).listFiles() ) {
+				System.out.println(f.getName()+" : "+  f.getName().substring(0, 2) );
+				if( f.getName().substring(0, 2).equals("he") || f.getName().substring(0, 2).equals("de") ){
+					f.delete();					
+				}
+			}
+			
+
+			//ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\total_image.jpg"));
 			
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
-		
+		System.out.println("End - MakeImage");
 	}
 	
 	public BufferedImage MakeBaseImage( BookVo bv) throws IOException{
 		BufferedImage bi = null;
+		BufferedImage head = null;
+		BufferedImage detail = null;
 		BufferedImage cover = null;
 		Image resizeImage = null;
 		
 		BufferedImage bi1 = null;
 		BufferedImage cover1 = null;
-		Image resizeImage1 = null;
-		
+		Image resizeImage1 = null;		
 		BufferedImage bi_d = null;
-		
 		int _x = 410;
+		
 		try {			
 			System.out.println("isbn : "+bv.getIsbn());
-			/*
-			for( File f  : list_img ) {
-				String file_name = getName(f.getName());								
-				if(file_name.equals(bv.getIsbn())) {
-					cover = ImageIO.read(new File( f.getPath()  ));
-					resizeImage = cover.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
-				}
-			}
+					
 			
-			for( File f  : big_img ) {
-				String file_name = getName(f.getName());								
-				if(file_name.equals(bv.getIsbn())) {
-					cover1 = ImageIO.read(new File( f.getPath()  ));
-					resizeImage1 = cover1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
-				}
-			}
-			*/
+			//bi 		= setImgjpg(bv);	// 리턴용 이미지
+			//head 	= setImgjpg(bv);	// 합성용 머리
+			//detail = setImgDetail(bv);	// 합성용 디테일
 			
-			System.out.println(resizeImage == null?"null 이다":"정상이다.");
+			setImg(bv);			// 해드 이미지 생성
+			//setImgTitle(bv);	// 대표 이미지 생성
 			
-			bi = setImgjpg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
-			/*Graphics2D graphics = (Graphics2D) bi.getGraphics();
+			BufferedImage _temp = new BufferedImage( detail.getWidth() , 394+detail.getHeight(), BufferedImage.TYPE_INT_RGB);
+			System.out.println("_temp.getHeight() : "+ _temp.getHeight());
+			Graphics2D graphics = (Graphics2D) _temp.getGraphics();
 			graphics.setBackground(Color.white);
-			graphics.drawImage(bi, 0, 0, null);			
-			graphics.drawImage(resizeImage , 20 , 95 , null);
-			*/
+			graphics.fillRect(0, 0, detail.getWidth(), 394+detail.getHeight());
 			
-			bi1 = setImg(bv);//ImageIO.read(new File( path +"img_guide_s.png"  ));			
-			/*Graphics2D graphics1 = (Graphics2D) bi1.getGraphics();
-			graphics1.setBackground(Color.white);
-			graphics1.drawImage(bi1, 0, 0, null);			
-			graphics1.drawImage(resizeImage1 , 20 , 95 , null);
-			ImageIO.write(bi1, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+bv.getIsbn()+".jpg"));
-			*/
-			
-			setImgDetail(bv);
-			
-			
+			graphics.drawImage(head, 0, 0, null);
+			graphics.drawImage(detail, 0, 394, null);
+
+			ImageIO.write(_temp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bv.getIsbn()+".jpg"));
 			
 			
 		} catch (Exception e) {			
@@ -175,60 +195,96 @@ public class ExportImage extends JPanel{
 	
 
 	//img_guide_s.jpg
-	public BufferedImage setImgjpg(BookVo bv) {
+	public BufferedImage setImgjpg(String fn) {
 		BufferedImage _bi = null;
-		
 		BufferedImage bi = null;
-		BufferedImage cover = null;
-		Image resizeImage = null;
 		
-		int _x = 270;
+		List<BookVo> _tmp = new ArrayList<BookVo>();
+		for(BookVo bv : _lb){
+			if(bv.getFile_name().equals(fn)){
+				_tmp.add(bv);
+			}
+		}
+		BufferedImage cover[] = new BufferedImage[_tmp.size()];
+		Image resizeImage[] = new Image[_tmp.size()];
+		
+		int _x = 265;
 		try {			
 			
-			for( File f  : list_img ) {
-				String file_name = getName(f.getName());								
-				if(file_name.equals(bv.getIsbn())) {
-					cover = ImageIO.read(new File( f.getPath()  ));
-					resizeImage = cover.getScaledInstance(200, 200, Image.SCALE_SMOOTH);					
+			for(int i=0; _tmp.size() > i ; i++){
+				for( File f  : list_img ) {
+					String file_name = getName(f.getName());								
+					if(file_name.equals( _tmp.get(i).getIsbn())) {
+						cover[i] = ImageIO.read(new File( f.getPath()  ));
+						resizeImage[i] = cover[i].getScaledInstance(200, 200, Image.SCALE_SMOOTH);					
+					}
 				}
 			}
 			
-			_bi = ImageIO.read(new File( path +"img_guide_s.jpg"  ));
-			Graphics2D graphics = (Graphics2D) _bi.getGraphics();
-			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			graphics.setBackground(Color.white);
-			//graphics.drawImage(_bi, 0, 0, null);
+			boolean _chk = true;
+			int _h = 0;
 			
-			graphics.setColor( c3 );
-			graphics.setFont(f3);
-			graphics.drawString( bv.getSeq() ,  50 ,  17);
+			int _s = (int)(_tmp.size() / 2)  * 394;
 			
-			graphics.setColor( c2 );
-			graphics.setFont(f2);
-			graphics.drawString( bv.getTitle() ,  100 ,  17);
-			
-			graphics.setColor( c1 );
-			graphics.setFont(f1);
-			graphics.drawString( bv.getIsbn() ,  _x ,  66);			
-			graphics.drawString( bv.getCompany() ,  _x ,  126);
-			
-			graphics.setColor( c2 );
-			graphics.setFont(f2);
-			graphics.drawString( bv.getSale_amt() ,  _x ,  187 );
+			BufferedImage base = new BufferedImage(900, _s , BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = (Graphics2D) base.getGraphics();
+			g.setBackground(Color.white);
 			
 			
-			graphics.setColor( c1 );
-			graphics.setFont(f1);
-			graphics.drawString( bv.getList_amt() ,  _x ,  246 );
-			
-			graphics.drawString( bv.getWriter() ,  _x ,  306 );
-			
-			graphics.drawString( bv.getPub_date() ,  _x ,  366 );
-			
-			graphics.drawImage(resizeImage , 4 , 110 , null);
 			
 			
-		} catch (IOException e) {			
+			for(int i=0; _tmp.size() > i ; i++){
+				_bi = ImageIO.read(new File( path +"img_guide_s.jpg"  ));
+				Graphics2D graphics = (Graphics2D) _bi.getGraphics();
+				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				graphics.setBackground(Color.white);
+				//graphics.drawImage(_bi, 0, 0, null);
+				
+				graphics.setColor( c3 );
+				graphics.setFont(f3);
+				graphics.drawString( _tmp.get(i).getSeq() ,  50 ,  17);
+				
+				graphics.setColor( c2 );
+				graphics.setFont(f2);
+				graphics.drawString( _tmp.get(i).getTitle() ,  100 ,  17);
+				
+				graphics.setColor( c1 );
+				graphics.setFont(f1);
+				graphics.drawString( _tmp.get(i).getIsbn() ,  _x ,  66);			
+				graphics.drawString( _tmp.get(i).getCompany() ,  _x ,  126);
+				
+				graphics.setColor( c2 );
+				graphics.setFont(f2);
+				graphics.drawString( _tmp.get(i).getSale_amt() ,  _x ,  187 );
+				
+				
+				graphics.setColor( c1 );
+				graphics.setFont(f1);
+				graphics.drawString( _tmp.get(i).getList_amt() ,  _x ,  246 );
+				
+				graphics.drawString( _tmp.get(i).getWriter() ,  _x ,  306 );
+				
+				graphics.drawString( _tmp.get(i).getPub_date() ,  _x ,  366 );
+				
+				graphics.drawImage(resizeImage[i] , 4 , 110 , null);
+				//ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\h"+_tmp.get(i).getIsbn()+".jpg"));
+				
+				if(_chk) {
+					g.drawImage( _bi , 0, _h, null);
+					_chk = false;
+				}else {
+					g.drawImage( _bi , 450 , _h, null);
+					_chk = true;
+					_h += 394;					
+				}
+				
+			}
+			for(int i=0; _tmp.size() > i ; i++){
+				ImageIO.write( base , "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\he"+_tmp.get(i).getIsbn()+".jpg"));
+			}
+			
+			
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		
@@ -254,7 +310,6 @@ public class ExportImage extends JPanel{
 					resizeImage1 = cover1.getScaledInstance(300, 300, Image.SCALE_SMOOTH);					
 				}
 			}
-
 			
 			
 			_bi = ImageIO.read(new File( path +"img_guide_s.png"  ));
@@ -290,55 +345,139 @@ public class ExportImage extends JPanel{
 			
 			graphics.drawImage(resizeImage1 , 20 , 95 , null);
 			
-			ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+bv.getIsbn()+".jpg"));
+			ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\he"+bv.getIsbn()+".jpg"));
 			
-		} catch (IOException e) {			
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		
 		return _bi;		
 	}
 	
-	public BufferedImage setImgDetail(BookVo bv) {
+	//purple_base.jpg
+	public BufferedImage setImgTitle( String fn ) { //파일 이름 보내 주면 처리
+		System.out.println("파일명 : "+fn);
+		
+		BufferedImage _bi = null;		
+		BufferedImage bi1 = null;
+		BufferedImage cover1[] = new BufferedImage[9];
+		Image resizeImage1[] = new Image[9];
+		
+		
+		//List<BookVo> _lb = new ArrayList<BookVo>();
+		List<BookVo> _tmp = new ArrayList<BookVo>();
+		for(BookVo bv : _lb){
+			if(bv.getFile_name().equals(fn)){
+				_tmp.add(bv);
+			}
+		}
+		System.out.println("_tmp.size : "+_tmp.size());
+		
+		try {			
+			for(int i=0; _tmp.size() > i ; i++){
+			for( File f  : big_img ) {
+				String file_name = getName( f.getName() );
+				if(file_name.equals(_tmp.get(i).getIsbn()) && i <= 8 ) {
+					cover1[i] = ImageIO.read(new File( f.getPath()  ));
+					resizeImage1[i] = cover1[i].getScaledInstance(132, 184, Image.SCALE_SMOOTH);
+				}
+				
+			}
+			}				
+			System.out.println("cover1.cover1 : "+cover1.length);
+			
+			_bi = ImageIO.read(new File( path +"purple_base.jpg"  ));
+			Graphics2D graphics = (Graphics2D) _bi.getGraphics();
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			graphics.setBackground(Color.white);
+			
+			
+			graphics.drawImage(resizeImage1[0] , 88  , 10 , null);			
+			graphics.drawImage(resizeImage1[1] , 234 , 10 , null);
+			graphics.drawImage(resizeImage1[2] , 380 , 10 , null);
+			
+			graphics.drawImage(resizeImage1[3] , 88  , 208 , null);
+			graphics.drawImage(resizeImage1[4] , 234 , 208 , null);
+			graphics.drawImage(resizeImage1[5] , 380 , 208 , null);
+			
+			graphics.drawImage(resizeImage1[6] , 88  , 406 , null);
+			graphics.drawImage(resizeImage1[7] , 234 , 406 , null);
+			graphics.drawImage(resizeImage1[8] , 380 , 406 , null);
+			
+			for(int i=0; _tmp.size() > i ; i++){
+				ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+_tmp.get(i).getIsbn()+".jpg"));
+			}
+			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		return _bi;		
+	}	
+	
+	public BufferedImage setImgDetail(String fn ) {
 		BufferedImage _bi = null;
 		BufferedImage _bi1 = null;
 		
+		//List<BookVo> _lb = new ArrayList<BookVo>();
+		List<BookVo> _tmp = new ArrayList<BookVo>();
+		for(BookVo bv : _lb){
+			if(bv.getFile_name().equals(fn)){
+				_tmp.add(bv);
+			}
+		}
+		System.out.println("setImgDetail _tmp.size : "+_tmp.size());
+		
+		BufferedImage _bi2[] = new BufferedImage[_tmp.size()];
 		
 		try {			
-			
+			for(int i=0; _tmp.size() > i ; i++){
 			for( File f  : detail_img ) {
 				String file_name = getName(f.getName());								
-				if(file_name.equals(bv.getIsbn())) {
-					_bi = ImageIO.read(new File( f.getPath()  ));										
+				if(file_name.equals(_tmp.get(i).getIsbn())) {
+					_bi2[i] = ImageIO.read(new File( f.getPath()  ));										
 				}
 			}	
+			}
+			int max_width = 0;
+			int max_height = 0;
+			for( BufferedImage bi : _bi2 ){
+				if( max_width <= bi.getWidth() ){
+					max_width = bi.getWidth();
+				}
+				max_height += (50 + bi.getHeight());
+				System.out.println(bi.getWidth()+" : "+bi.getHeight());
+			}
 			
+			BufferedImage __tmp = new BufferedImage( max_width , max_height, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = (Graphics2D) __tmp.getGraphics();
+			int cur_height = 0;
+			for(int i=0; _tmp.size() > i ; i++){
+				BufferedImage test_bi = _bi2[i];				
+				BufferedImage _t = new BufferedImage( test_bi.getWidth() , test_bi.getHeight()+50, BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics = (Graphics2D) _t.getGraphics();
+				graphics.setBackground(Color.white);
+				_bi1 = ImageIO.read(new File( path +"detail_guide.png"  ));
+				graphics.drawImage( _bi1, 0, 0, null);
+				graphics.drawImage( test_bi, 0, 70, null);
+				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				graphics.setColor( c3 );
+				graphics.setFont(f3);
+				graphics.drawString( _tmp.get(i).getSeq() ,  10 ,  55);
+				graphics.setColor( c2 );
+				graphics.setFont(f2);
+				graphics.drawString( _tmp.get(i).getTitle() ,  30 ,  55);				
+				
+				
+				g.drawImage(_t , 0 , cur_height , null);
+				cur_height += _t.getHeight();
+			}
+			for(int i=0; _tmp.size() > i ; i++){
+				ImageIO.write(__tmp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\de"+_tmp.get(i).getIsbn()+".jpg"));
+			}
+			//ImageIO.write(__tmp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\de"+".jpg"));
 			
-			_bi1 = ImageIO.read(new File( path +"detail_guide.png"  ));
-			
-			BufferedImage _temp = new BufferedImage( _bi.getWidth() , _bi.getHeight()+50, BufferedImage.TYPE_INT_RGB);
-			
-			Graphics2D graphics = (Graphics2D) _temp.getGraphics();
-			graphics.setBackground(Color.white);
-			
-			graphics.drawImage(_bi1, 0, 0, null);
-			graphics.drawImage(_bi, 0, 70, null);
-			
-			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			graphics.setColor( c3 );
-			graphics.setFont(f3);
-			graphics.drawString( bv.getSeq() ,  10 ,  55);
-			
-			graphics.setColor( c2 );
-			graphics.setFont(f2);
-			graphics.drawString( bv.getTitle() ,  30 ,  55);
-			
-			
-			
-			ImageIO.write(_temp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bv.getIsbn()+".jpg"));
-		
-			
-		} catch (IOException e) {			
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		

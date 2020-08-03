@@ -10,9 +10,18 @@ public class BookVo {
 	private String list_amt;	//6
 	private String writer;		//11
 	private String pub_date;	//17
+	private String file_name; 	// 파일 이름
 	
+	public String getFile_name() {
+		return file_name;
+	}
+
+	public void setFile_name(String file_name) {
+		this.file_name = file_name;
+	}
+
 	public String getlist() {
-		return seq+" : "+isbn+" : "+title+" : "+company+" : "+sale_amt+" : "+list_amt+" : "+writer+" : "+pub_date;
+		return seq+" : "+isbn+" : "+title+" : "+company+" : "+sale_amt+" : "+list_amt+" : "+writer+" : "+pub_date+" : "+file_name;
 	}
 	
 	public String getSeq() {

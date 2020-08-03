@@ -65,11 +65,18 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     JButton ok_btn;
     JButton getMyNumber;    
     JButton setMyNumber;
+    JButton fullAuto;	//완전 자동 번호 생성
+    
+    
+    
     JButton notice_btn;
+    JButton notice_btn2;	//시청자 선물하기
     
     String notice_txt = "";
     
-    JButton send_btn;
+    JButton send_btn;    
+    JButton gift_btn;	//좌측 선물하기 버튼
+    
     
     
     String str ="";
@@ -84,7 +91,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     DefaultTableModel dtm = new DefaultTableModel(data,column){ public boolean isCellEditable(int i, int c){ return false; } };
     
     String data1[][]= {};			  
-    String column1[]={"행번호","일자"};     
+    String column1[]={"번호","회차"};     
     DefaultTableModel dtm1 = new DefaultTableModel(data1 , column1){ public boolean isCellEditable(int i, int c){ return false; } };
 
     JTextField lab3;
@@ -101,7 +108,12 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        ok_btn = new JButton("확인");
 	        ok_btn.addActionListener(this);
-	        ok_btn.setBounds(210, 5, 60, 20); // x , y , w , h
+	        ok_btn.setBounds(210, 5, 65, 20); // x , y , w , h
+	        
+	        gift_btn = new JButton("선물하기");
+	        gift_btn.addActionListener(this);
+	        gift_btn.setBounds(280, 5, 90, 20); // x , y , w , h
+	        this.add(gift_btn);
 	        
 	        JTextField lab1 = new JTextField("이번 회차 정보");	 
 	        lab1.setEditable(false);
@@ -120,11 +132,13 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        num1 = new JTextField(2);
 	        num1.setBounds(20, 90, 50, 35); // x , y , w , h
-	        num1.setHorizontalAlignment(JTextField.CENTER);
+	        num1.setHorizontalAlignment(JTextField.CENTER);	        
 	        num1.addKeyListener(this);
+	        
 	        IntegerDocument  id1 = new IntegerDocument ();
 	        num1.setDocument(id1);
 
+	        num1.requestFocus();
 	        
 	        num2 = new JTextField(2);
 	        num2.setBounds(80, 90, 50, 35); // x , y , w , h
@@ -163,7 +177,13 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        setMyNumber = new JButton("번호 등록하기");
 	        setMyNumber.addActionListener(this);
-	        setMyNumber.setBounds(20, 140, 350, 30); // x , y , w , h
+	        setMyNumber.setBounds(20, 140, 250, 30); // x , y , w , h
+	        
+	        
+	        fullAuto = new JButton("자동 생성");
+	        fullAuto.addActionListener(this);
+	        fullAuto.setBounds(275, 140, 95, 30); // x , y , w , h
+	        this.add(fullAuto);
 	        
 	        lab3 = new JTextField("이번 회차 나의 등록번호");	 
 	        lab3.setEditable(false);
@@ -174,19 +194,27 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 		   
 		  JTable jt=new JTable( dtm );
-		  jt.getColumnModel().getColumn(0).setMaxWidth(130);
-		  jt.getColumnModel().getColumn(1).setMaxWidth(130);
-		  jt.getColumnModel().getColumn(2).setMaxWidth(90);
+		  jt.getColumnModel().getColumn(0).setMaxWidth(145);
+		  jt.getColumnModel().getColumn(1).setMaxWidth(145);
+		  jt.getColumnModel().getColumn(2).setMaxWidth(60);
 		  dtm.fireTableDataChanged();
 		  JScrollPane jsp = new JScrollPane(jt);
-		  jsp.setBounds(20,210,350,300);	// x , y , w , h
+		  jsp.setBounds(20,210,350,200);	// x , y , w , h
 		  
 		  this.add(jsp);
 		  
 	        notice_btn = new JButton("후원하기");
 	        notice_btn.addActionListener(this);
-	        notice_btn.setBounds(380, 5, 350, 90); // x , y , w , h
-	        this.add(notice_btn);	
+	        notice_btn.setBounds(380, 5, 175, 90); // x , y , w , h
+	        this.add(notice_btn);
+	        
+	        
+	        notice_btn2 = new JButton("선물하기");
+	        notice_btn2.addActionListener(this);
+	        notice_btn2.setBounds(560, 5, 170, 90); // x , y , w , h
+	        this.add(notice_btn2);
+	        
+	        
 		  
 	        JTextField lab4 = new JTextField("지난 회차 보기");	 
 	        lab4.setEditable(false);
@@ -195,11 +223,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        this.add(lab4);		  
 		  
 		  JTable jt1=new JTable( dtm1 );
-		  jt1.getColumnModel().getColumn(0).setMaxWidth(100);
-		  jt1.getColumnModel().getColumn(1).setMaxWidth(250);
+		  jt1.getColumnModel().getColumn(0).setMaxWidth(40);
+		  jt1.getColumnModel().getColumn(1).setMaxWidth(310);
 		  dtm1.fireTableDataChanged();
 		  JScrollPane jsp1 = new JScrollPane(jt1);
-		  jsp1.setBounds(380,140,350,370);	// x , y , w , h
+		  jsp1.setBounds(380,140,350,270);	// x , y , w , h
 
 		  
 		  jt1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -222,6 +250,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        this.add(nick_lab);
 	        this.add(nick_name);
 	        this.add(ok_btn);
+	        
 	        this.add( lab1 );
 	        this.add( lab2 );
 	        
@@ -240,7 +269,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 
 	        this.setVisible(true);	 
 	        this.setTitle("환영합니다-----------------!");
-	        this.setSize( 768 , 576);	 
+	        this.setSize( 768 , 600);	 
 	        this.setLocationRelativeTo(null);	 
 	        this.setResizable(false);	 
 	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -578,14 +607,14 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	
 	public void fff(){
 		
-	}
-
-   
+	}  
 
 
 	public void keyTyped(KeyEvent e) {}
 	public void keyPressed(KeyEvent e) {}
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+		System.out.println("e : "+e.toString());
+	}
 
 
 
