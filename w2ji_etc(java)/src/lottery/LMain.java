@@ -10,6 +10,7 @@ public class LMain {
 
 	public static void main(String[] args) {
 		LotteryMain lm = new LotteryMain();
+		//GiftPanel gp = new GiftPanel("test");
 
 	}
 
