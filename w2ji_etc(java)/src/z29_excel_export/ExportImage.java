@@ -120,13 +120,13 @@ public class ExportImage extends JPanel{
 				}
 				
 				if( bi_he != null && bi_de != null){
-					BufferedImage base = new BufferedImage(900, bi_he.getHeight() + bi_de.getHeight() , BufferedImage.TYPE_INT_RGB);
+					BufferedImage base = new BufferedImage(900, bi_he.getHeight() + bi_de.getHeight()+30 , BufferedImage.TYPE_INT_RGB);
 					Graphics2D g = (Graphics2D) base.getGraphics();
 					g.setBackground(Color.white);
-					g.fillRect(0, 0, 900, bi_he.getHeight() + bi_de.getHeight());
+					g.fillRect(0, 0, 900, bi_he.getHeight() + bi_de.getHeight()+30);
 					
 					g.drawImage( bi_he , 0, 0, null);
-					g.drawImage( bi_de , 0, bi_he.getHeight(), null);				
+					g.drawImage( bi_de , 0, bi_he.getHeight()+30, null);				
 					ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bb.getIsbn()+".jpg"));
 				}		
 				
@@ -449,17 +449,27 @@ public class ExportImage extends JPanel{
 				System.out.println(bi.getWidth()+" : "+bi.getHeight());
 			}
 			
-			BufferedImage __tmp = new BufferedImage( max_width , max_height, BufferedImage.TYPE_INT_RGB);
+			BufferedImage __tmp = new BufferedImage( 900 , max_height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = (Graphics2D) __tmp.getGraphics();
+			g.setBackground(Color.white);
+			g.fillRect(0, 0, 900, max_height);
+			
+			boolean _aaa = true;
 			int cur_height = 0;
 			for(int i=0; _tmp.size() > i ; i++){
 				BufferedImage test_bi = _bi2[i];				
-				BufferedImage _t = new BufferedImage( test_bi.getWidth() , test_bi.getHeight()+50, BufferedImage.TYPE_INT_RGB);
+				BufferedImage _t = new BufferedImage( 900 , test_bi.getHeight()+50, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics = (Graphics2D) _t.getGraphics();
 				graphics.setBackground(Color.white);
-				_bi1 = ImageIO.read(new File( path +"detail_guide.png"  ));
-				graphics.drawImage( _bi1, 0, 0, null);
-				graphics.drawImage( test_bi, 0, 70, null);
+				graphics.fillRect(0, 0, 900, test_bi.getHeight()+50);
+				
+				if(_aaa){
+					_bi1 = ImageIO.read(new File( path +"detail_guide.png"  ));
+					graphics.drawImage( _bi1, 0, 0, null);
+					_aaa = false;
+				}
+				
+				graphics.drawImage( test_bi, 100, 70, null);
 				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				graphics.setColor( c3 );
 				graphics.setFont(f3);

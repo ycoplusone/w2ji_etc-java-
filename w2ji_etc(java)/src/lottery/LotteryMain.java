@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JButton;
@@ -38,6 +40,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.google.gson.*;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 import word_20200614.WordDbConnect;
 
@@ -87,12 +90,17 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     Boolean id_chk = false; //정상 아이디 체크 
     
     String data[][]= {};			  
-    String column[]={"나의번호","추첨번호","당첨갯수"};     
+    String column[]={"번호","나의번호","추첨번호","당첨"};     
     DefaultTableModel dtm = new DefaultTableModel(data,column){ public boolean isCellEditable(int i, int c){ return false; } };
     
     String data1[][]= {};			  
     String column1[]={"번호","회차"};     
     DefaultTableModel dtm1 = new DefaultTableModel(data1 , column1){ public boolean isCellEditable(int i, int c){ return false; } };
+    
+    String data2[][]= {};			  
+    String column2[]={"번호","닉네임","전번","카톡","페이스","금액","물품","기타 텍스트","지역"};     
+    DefaultTableModel dtm2 = new DefaultTableModel(data2 , column2){ public boolean isCellEditable(int i, int c){ return false; } };    
+    
 
     JTextField lab3;
 	
@@ -129,16 +137,45 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        d_day = aa[3]; // 마감일자.
 	        lab2.setText(   aa[0] );	        
 	        
+	        JTextField lab5 = new JTextField("선물한 내역 보기");
+	        lab5.setEditable(false);
+	        lab5.setBounds(20, 415, 710, 20); // x , y , w , h	        
+	        this.add(lab5);
+	        
+			  JTable jt2=new JTable( dtm2 );
+			  //jt2.getColumnModel().getColumn(0).setMaxWidth(40);
+			  //jt2.getColumnModel().getColumn(1).setMaxWidth(310);
+			  dtm2.fireTableDataChanged();
+			  JScrollPane jsp2 = new JScrollPane(jt2);
+			  jsp2.setBounds(20,440,710,200);	// x , y , w , h
+
+			  
+			  jt2.addMouseListener(new java.awt.event.MouseAdapter() {
+				    @Override
+				    public void mouseClicked(java.awt.event.MouseEvent evt) {
+				    	int row = jt2.getSelectedRow();
+						 Object value0 = jt2.getValueAt(row, 0);
+						 Object value1 = jt2.getValueAt(row, 1);
+						 System.out.println(value0+" : "+value1);
+						 getMyLotteryNumber( value0.toString() , nick_name.getText() );
+						 lab3.setText(value1.toString());
+				    }
+				});
+			  
+			  this.add(jsp2);
+	        
+	        
+	        
 	        
 	        num1 = new JTextField(2);
 	        num1.setBounds(20, 90, 50, 35); // x , y , w , h
-	        num1.setHorizontalAlignment(JTextField.CENTER);	        
-	        num1.addKeyListener(this);
+	        num1.setHorizontalAlignment(JTextField.CENTER);
 	        
+	        num1.addKeyListener(this);	        
 	        IntegerDocument  id1 = new IntegerDocument ();
 	        num1.setDocument(id1);
 
-	        num1.requestFocus();
+	        
 	        
 	        num2 = new JTextField(2);
 	        num2.setBounds(80, 90, 50, 35); // x , y , w , h
@@ -194,13 +231,13 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 		   
 		  JTable jt=new JTable( dtm );
-		  jt.getColumnModel().getColumn(0).setMaxWidth(145);
+		  jt.getColumnModel().getColumn(0).setMaxWidth(30);
 		  jt.getColumnModel().getColumn(1).setMaxWidth(145);
-		  jt.getColumnModel().getColumn(2).setMaxWidth(60);
+		  jt.getColumnModel().getColumn(2).setMaxWidth(145);
+		  jt.getColumnModel().getColumn(3).setMaxWidth(30);
 		  dtm.fireTableDataChanged();
 		  JScrollPane jsp = new JScrollPane(jt);
-		  jsp.setBounds(20,210,350,200);	// x , y , w , h
-		  
+		  jsp.setBounds(20,210,350,200);	// x , y , w , h		  
 		  this.add(jsp);
 		  
 	        notice_btn = new JButton("후원하기");
@@ -269,10 +306,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 
 	        this.setVisible(true);	 
 	        this.setTitle("환영합니다-----------------!");
-	        this.setSize( 768 , 600);	 
+	        this.setSize( 753 , 690);	 
 	        this.setLocationRelativeTo(null);	 
 	        this.setResizable(false);	 
-	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	        
+	        
 	    }
 	   
 
@@ -280,6 +318,30 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		   
 		   if( e.getSource() == ok_btn ){ //별칭 확인 버튼
 			   id_creat();
+		   }else if( e.getSource() == fullAuto ){ // 번호 자동 생성
+			   System.out.println("번호 자동 생성");
+			   List<String> li = new ArrayList<String>();
+			   for( int i=0; i <= 50 ; i++ ){
+				   Random rd = new Random();
+				   int tt = ( rd.nextInt(45) + 1);
+				   String t = Integer.toString(tt);
+				   boolean _chk = true;
+				   for( String str : li ){
+					   if( str.equals(t)){
+						   _chk = false;
+					   }
+				   }
+				   if(_chk){
+					   li.add(t);
+				   }
+			   }
+			   num1.setText( li.get(0) );
+			   num2.setText( li.get(1) );
+			   num3.setText( li.get(2) );
+			   num4.setText( li.get(3) );
+			   num5.setText( li.get(4) );
+			   num6.setText( li.get(5) );
+			   
 		   }else if( e.getSource() == getMyNumber ){			   
 		   }else if( e.getSource() == setMyNumber ){
 			   Boolean chk = checkNumber( num1.getText() , num2.getText() , num3.getText() , num4.getText() , num5.getText() , num6.getText()  );
@@ -302,10 +364,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 					dtm.setRowCount(0);
 					for (int i = 0; i < memberArray.size(); i++) {
 						JsonObject object = (JsonObject) memberArray.get(i);
-						String [] ss = new String[3];
-						ss[0] = object.get("mynum").toString().replace("\"", "");
-						ss[1] = object.get("goal").toString().replace("\"", "");
-						ss[2] = object.get("point").toString().replace("\"", "");
+						String [] ss = new String[4];
+						ss[0] = object.get("id").toString().replace("\"", "");
+						ss[1] = object.get("mynum").toString().replace("\"", "");
+						ss[2] = object.get("goal").toString().replace("\"", "");
+						ss[3] = object.get("point").toString().replace("\"", "");						
 						dtm.addRow(ss);
 					}
 					num1.setText("");
@@ -578,14 +641,16 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		dtm.setRowCount(0);
 		for (int i = 0; i < memberArray.size(); i++) {
 			JsonObject object = (JsonObject) memberArray.get(i);
-			String [] ss = new String[3];
-			ss[0] = object.get("mynum").toString().replace("\"", "");
-			ss[1] = object.get("goal").toString().replace("\"", "");
-			ss[2] = object.get("point").toString().replace("\"", "");
+			String [] ss = new String[4];
+			ss[0] = object.get("id").toString().replace("\"", "");
+			ss[1] = object.get("mynum").toString().replace("\"", "");
+			ss[2] = object.get("goal").toString().replace("\"", "");
+			ss[3] = object.get("point").toString().replace("\"", "");
 			dtm.addRow(ss);
 		}
 	}
-
+	
+	//지난 회차 보기
 	public void getPastLotteryInfo() {		
 		HashMap hm = new HashMap<String, String>();
 		String url = url_base+"/pastlottery";
@@ -605,15 +670,26 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		notice_txt = jsonObj.get("notice").toString().replace("\"", "");
 	}
 	
-	public void fff(){
-		
-	}  
+
 
 
 	public void keyTyped(KeyEvent e) {}
 	public void keyPressed(KeyEvent e) {}
 	public void keyReleased(KeyEvent e) {
-		System.out.println("e : "+e.toString());
+		int keycode = e.getKeyCode(); // 37 왼쪽 , 39 오른쪽
+		if( e.getSource() == num1 ){
+			if( keycode==37 ){ num6.requestFocus(); }else{ num2.requestFocus(); }			
+		}else if( e.getSource() == num2 ){
+			if( keycode==37 ){ num1.requestFocus(); }else{ num3.requestFocus(); }
+		}else if( e.getSource() == num3 ){
+			if( keycode==37 ){ num2.requestFocus(); }else{ num4.requestFocus(); }
+		}else if( e.getSource() == num4 ){
+			if( keycode==37 ){ num3.requestFocus(); }else{ num5.requestFocus(); }
+		}else if( e.getSource() == num5 ){
+			if( keycode==37 ){ num4.requestFocus(); }else{ num6.requestFocus(); }
+		}else if( e.getSource() == num6 ){
+			if( keycode==37 ){ num5.requestFocus(); }else{ num1.requestFocus(); }
+		}		
 	}
 
 
