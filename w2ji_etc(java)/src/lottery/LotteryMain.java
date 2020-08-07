@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -82,6 +84,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     
     
     
+    
     String str ="";
     
     String id = "";
@@ -98,14 +101,16 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     DefaultTableModel dtm1 = new DefaultTableModel(data1 , column1){ public boolean isCellEditable(int i, int c){ return false; } };
     
     String data2[][]= {};			  
-    String column2[]={"번호","닉네임","전번","카톡","페이스","금액","물품","기타 텍스트","지역"};     
+    public String column2[]={"번호","닉네임","전번","카톡","페이스","금액","물품","기타 텍스트","지역"};     
     DefaultTableModel dtm2 = new DefaultTableModel(data2 , column2){ public boolean isCellEditable(int i, int c){ return false; } };    
     
 
     JTextField lab3;
+    
+    JFrame f_gift = null;
 	
 	
-	   public LotteryMain() {		   
+	   public void Lottery() {		   
 		    this.setLayout(null);
 		   
 	        JLabel nick_lab = new JLabel("닉네임  : ");	 
@@ -397,7 +402,16 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			   
 
 		   }else if( e.getSource() == gift_btn) {
-			   GiftPanel gp = new GiftPanel( nick_name.getText() );
+			   f_gift = new GiftPanel( nick_name.getText() );
+			   f_gift.addWindowListener(new WindowAdapter() {
+
+				   public void windowClosed(WindowEvent we) {
+					   // 종료시 이벤트
+					    System.out.println(we.getSource());
+					  }
+			   	}
+			   
+			   );
 		   }
 		   
 		   

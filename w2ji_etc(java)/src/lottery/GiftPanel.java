@@ -44,8 +44,10 @@ import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -75,16 +77,16 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		
 		String _id = "";
 		
-		CheckboxGroup cbg0 = new CheckboxGroup();
-		Checkbox cb0_1 = null;
-		Checkbox cb0_2 = null;
+		ButtonGroup  cbg0 = new ButtonGroup();
+		JCheckBox cb0_1 = null;
+		JCheckBox cb0_2 = null;
 		JTextField jt0_3 = null;
 		
-		CheckboxGroup cbg1 = new CheckboxGroup();
-		Checkbox cb1_1 = null;
-		Checkbox cb1_2 = null;
-		Checkbox cb1_3 = null;
-		Checkbox cb1_4 = null;
+		ButtonGroup cbg1 = new ButtonGroup();
+		JCheckBox cb1_1 = null;
+		JCheckBox cb1_2 = null;
+		JCheckBox cb1_3 = null;
+		JCheckBox cb1_4 = null;
 		
 		JTextField jt2_1 = null;
 		JTextField jt2_2 = null;
@@ -112,8 +114,12 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		File f2 = null;
 		File f3 = null;
 		
+		JTextField jt5_1 = null;
+		JTextField jt5_2 = null;
+		
 		JButton summit_bnt = null;
 		JButton cancel_bnt = null;
+		SendFile sf = new SendFile();
 	
 		public GiftPanel(String nickname){
 			this._id = nickname;
@@ -124,12 +130,16 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 			jp1.setBorder( BorderFactory.createTitledBorder("지역") );
 			jp1.setBounds(10 , 10 , 200 , 150);
 	        
-			cb0_1 = new Checkbox("전체", cbg0, true);    
-			cb0_1.setBounds(10,30, 50,20);
-			jp1.add(cb0_1);
+			cb0_1 = new JCheckBox("전체", true);    
+			cb0_1.setBounds(10,30, 100,20);
+			cbg0.add(cb0_1);
+			//jp1.add(cb0_1);
 			
-			cb0_2 = new Checkbox("기타", cbg0, false);    
-			cb0_2.setBounds(10,70, 50,20);
+			cb0_2 = new JCheckBox("기타", false);    
+			cb0_2.setBounds(10,70, 100,20);
+			cbg0.add(cb0_2);
+			
+			jp1.add(cb0_1);
 			jp1.add(cb0_2);
 			
 			jt0_3 = new JTextField();
@@ -143,20 +153,24 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 			jp2.setBorder( BorderFactory.createTitledBorder("등수 선물") );
 			jp2.setBounds(210 , 10 , 250 , 150);
 			
-			cb1_1 = new Checkbox("3개 일치 4등", cbg1 , true);    
+			cb1_1 = new JCheckBox("3개 일치 4등",  true);    
 			cb1_1.setBounds(10,20, 180,20);
+			cbg1.add(cb1_1);
 			jp2.add(cb1_1);
 			
-			cb1_2 = new Checkbox("4개 일치 3등", cbg1 , false);    
+			cb1_2 = new JCheckBox("4개 일치 3등", false);    
 			cb1_2.setBounds(10,50, 180,20);
+			cbg1.add(cb1_2);
 			jp2.add(cb1_2);
 			
-			cb1_3 = new Checkbox("5개 일치 2등", cbg1 , false);    
+			cb1_3 = new JCheckBox("5개 일치 2등", false);    
 			cb1_3.setBounds(10,80, 180,20);
+			cbg1.add(cb1_3);
 			jp2.add(cb1_3);
 			
-			cb1_4 = new Checkbox("6개 일치 1등", cbg1 , false);    
+			cb1_4 = new JCheckBox("6개 일치 1등", false);    
 			cb1_4.setBounds(10,110, 180,20);
+			cbg1.add(cb1_4);
 			jp2.add(cb1_4);
 			
 			this.add(jp2);
@@ -252,26 +266,49 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 			
 			jt4_2 = new JTextField();
 			jt4_2.setBounds(55,150, 180,20);
-			jp4.add( jt4_2 );			
-			
+			jp4.add( jt4_2 );
 			this.add(jp4);
 			
+			JPanel jp5 = new JPanel();
+			jp5.setLayout(null);
+			jp5.setBorder( BorderFactory.createTitledBorder("선물") );
+			jp5.setBounds( 10 , 350 , 450 , 50);
+			
+			JLabel jl8 = new JLabel("금액 : ");
+			jl8.setBounds(10,15, 60 ,20);
+			jp5.add( jl8 );
+			
+			jt5_1 = new JTextField();
+			jt5_1.setBounds(55,15, 130,20);
+			jp5.add( jt5_1 );
+			
+			JLabel jl9 = new JLabel("물품 : ");
+			jl9.setBounds(200,15, 60 ,20);
+			jp5.add( jl9 );
+			
+			jt5_2 = new JTextField();
+			jt5_2.setBounds(260,15, 130,20);
+			jp5.add( jt5_2 );
+			
+			this.add(jp5);
+
+			
 			summit_bnt = new JButton("확인");
-			summit_bnt.setBounds(108 , 353 , 100 , 50 );
+			summit_bnt.setBounds(108 , 405 , 100 , 40 );
 			summit_bnt.addActionListener(this);
 			this.add(summit_bnt);
 			
 			cancel_bnt = new JButton("취소");
-			cancel_bnt.setBounds(212 , 353 , 100 , 50 );
+			cancel_bnt.setBounds(212 , 405 , 100 , 40 );
 			cancel_bnt.addActionListener(this);
 			this.add(cancel_bnt);
 		    
 	        this.setVisible(true);	 
 	        this.setTitle(nickname+" 선물하기");
-	        this.setSize( 500 , 450);	 
+	        this.setSize( 500 , 500);	 
 	        this.setLocationRelativeTo(null);	 
 	        this.setResizable(false);	 
-	        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	        
+	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	        
 	    }
    
 
@@ -279,30 +316,87 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 			
 			if( e.getSource() == bnt1_1 ){
 				try {
-					loadImage( jl4_1 , f1 );
+					loadImage( jl4_1 , "f1" );
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 
 			}else if( e.getSource() == bnt2_1 ){
 				try {
-					loadImage( jl4_2 , f2 );
+					loadImage( jl4_2 , "f2");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}				
 			}else if( e.getSource() == bnt3_1 ){
 				try {
-					loadImage( jl4_3 , f3 );
+					loadImage( jl4_3 , "f3" );
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}else if( e.getSource() == summit_bnt ){
-				System.out.println("확인");
+				System.out.println("확인 summit_bnt");
+				
+				try {
+					String _tmp = sf.sendtest(f1,f2,f3 , getValue());
+					JsonParser Parser = new JsonParser();
+					JsonObject jsonObj = (JsonObject) Parser.parse( _tmp );
+					String aa = jsonObj.get("boolean").toString().replace("\"", "");					
+					
+					if(aa.equals("true")) {
+						//this.setVisible(false);
+						this.dispose();
+					}
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				
+				
 			}else if( e.getSource() == cancel_bnt ){
-				this.setVisible(false);
+				//this.setVisible(false);
+				this.dispose();
+				
+				//this.EXIT_ON_CLOSE;
+				
 			}
 			
 		}
+		
+	public GiftVO getValue() {
+		GiftVO _vo = new GiftVO();
+		
+		_vo.setNickname( _id );
+		
+		if( cb0_1.isSelected() ) {
+			_vo.setLocal("전체");
+		}else {
+			_vo.setLocal( jt0_3.getText() );
+		}
+		
+		if( cb1_1.isSelected() ) {
+			_vo.setRankgift("3개 일치 4등");
+		}else if( cb1_2.isSelected() ) {
+			_vo.setRankgift("4개 일치 3등");
+		}else if( cb1_3.isSelected() ) {
+			_vo.setRankgift("5개 일치 2등");
+		}else if( cb1_4.isSelected() ) {
+			_vo.setRankgift("6개 일치 1등");
+		}
+		
+		_vo.setTel( 	jt2_1.getText() );
+		_vo.setKakao( 	jt2_2.getText() );
+		_vo.setFacebook(jt2_3.getText() );
+		_vo.setTeletc(  jt2_4.getText() );
+		_vo.setPhoto_comment( jt4_1.getText() );
+		_vo.setPhoto_etc( jt4_2.getText() );
+		_vo.setAmt( jt5_1.getText() );
+		_vo.setProdct( jt5_2.getText());
+		
+		return _vo;
+	} 
 
 
 	public void keyTyped(KeyEvent e) {}
@@ -325,13 +419,12 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		}*/		
 	}
 
-	   public void loadImage(JLabel jl , File f ) throws Exception {
+	   public void loadImage(JLabel jl , String str) throws Exception {
 		   	jl.setIcon(null);
-			f = null;
+			File _f = null;
 	        JFileChooser fileChooser = new JFileChooser();
 	        fileChooser.setDialogTitle("파일 불러오기");
 	        fileChooser.setFileFilter(new FileNameExtensionFilter("","jpg", "png","gif","bmp")); // 파일필터
-	        	        
 	        
 	        fileChooser.setMultiSelectionEnabled(false);// 다중 선택 불가
 	        int returnVal = fileChooser.showOpenDialog(this); // show openDialog 
@@ -339,11 +432,23 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 	            try{
 	            	
 	                //loadImage(fileChooser.getSelectedFile().toString());
-	            	String url = fileChooser.getSelectedFile().toString();		            	
-	            	f = new File(url);
+	            	String url = fileChooser.getSelectedFile().toString();
+	       
+	            	_f = new File(url);
+	            	if(str.equals("f1")) {
+	            		this.f1 = null;
+	            		this.f1 = _f;	            		
+	            	}else if( str.equals("f2") ) {
+	            		this.f2 = null;
+	            		this.f2 = _f;
+	            	}else if( str.equals("f3") ) {
+	            		this.f3 = null;
+	            		this.f3 = _f;
+	            	}
+	            	System.out.println("f : "+_f.getName());
 	            	
 	            	BufferedImage base = new BufferedImage(56, 56 , BufferedImage.TYPE_INT_RGB);
-	            	BufferedImage  imgIcon = ImageIO.read( f );
+	            	BufferedImage  imgIcon = ImageIO.read( _f );
 	            	Image reimg = imgIcon.getScaledInstance(56, 56, Image.SCALE_SMOOTH);
 	            	Graphics2D g = (Graphics2D) base.getGraphics();
 	            	g.drawImage(reimg, 0, 0 , null);
