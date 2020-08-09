@@ -76,6 +76,7 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		String url_base = MemberVarible.url;
 		
 		String _id = "";
+		String _thisinfo = "";
 		
 		ButtonGroup  cbg0 = new ButtonGroup();
 		JCheckBox cb0_1 = null;
@@ -120,9 +121,11 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		JButton summit_bnt = null;
 		JButton cancel_bnt = null;
 		SendFile sf = new SendFile();
+		
 	
-		public GiftPanel(String nickname){
+		public GiftPanel(String nickname , String id){
 			this._id = nickname;
+			this._thisinfo = id;
 			this.setLayout(null);
 			
 			JPanel jp1 = new JPanel();
@@ -368,7 +371,7 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 	public GiftVO getValue() {
 		GiftVO _vo = new GiftVO();
 		
-		_vo.setNickname( _id );
+		_vo.setNickname( this._id );
 		
 		if( cb0_1.isSelected() ) {
 			_vo.setLocal("전체");
@@ -394,6 +397,7 @@ public class GiftPanel extends JFrame  implements ActionListener , KeyListener {
 		_vo.setPhoto_etc( jt4_2.getText() );
 		_vo.setAmt( jt5_1.getText() );
 		_vo.setProdct( jt5_2.getText());
+		_vo.setInfo_id( this._thisinfo);
 		
 		return _vo;
 	} 

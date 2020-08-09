@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 
 import com.google.gson.*;
 import com.mysql.fabric.xmlrpc.base.Array;
@@ -54,6 +56,8 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	
 	String url_base = MemberVarible.url;
 	SendPost sp = new SendPost();
+	
+	Timer getInfo; //정보 가져오기.
 	
     JButton logBtn;
    
@@ -123,7 +127,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        ok_btn.addActionListener(this);
 	        ok_btn.setBounds(210, 5, 65, 20); // x , y , w , h
 	        
-	        gift_btn = new JButton("선물하기");
+	        gift_btn = new JButton("선물하기");	        
 	        gift_btn.addActionListener(this);
 	        gift_btn.setBounds(280, 5, 90, 20); // x , y , w , h
 	        this.add(gift_btn);
@@ -138,7 +142,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        lab2.setBounds(20, 55, 350, 20); // x , y , w , h
 	        
 	        String aa[] = getLotteryInfo();
-	        id = aa[1]; // 이번 회차 id값
+	        this.id = aa[1]; // 이번 회차 id값
 	        d_day = aa[3]; // 마감일자.
 	        lab2.setText(   aa[0] );	        
 	        
@@ -154,7 +158,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			  JScrollPane jsp2 = new JScrollPane(jt2);
 			  jsp2.setBounds(20,440,710,200);	// x , y , w , h
 
-			  
+			  /*
 			  jt2.addMouseListener(new java.awt.event.MouseAdapter() {
 				    @Override
 				    public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -165,7 +169,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 						 getMyLotteryNumber( value0.toString() , nick_name.getText() );
 						 lab3.setText(value1.toString());
 				    }
-				});
+				});*/
 			  
 			  this.add(jsp2);
 	        
@@ -224,6 +228,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        fullAuto = new JButton("자동 생성");
 	        fullAuto.addActionListener(this);
+	        fullAuto.setEnabled(false);
 	        fullAuto.setBounds(275, 140, 95, 30); // x , y , w , h
 	        this.add(fullAuto);
 	        
@@ -252,7 +257,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        
 	        notice_btn2 = new JButton("선물하기");
-	        notice_btn2.addActionListener(this);
+	        notice_btn2.addActionListener(this);	        
 	        notice_btn2.setBounds(560, 5, 170, 90); // x , y , w , h
 	        this.add(notice_btn2);
 	        
@@ -305,9 +310,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        this.add(setMyNumber);
 	        
 	        id_load();	//별칭 가져오기
+	        startInfo(); // 오토 정보 가져오기
 	        
 	        getMyLotteryNumber(id , nick_name.getText() ); // 나의 등록 번호 가져오기
 	        getPastLotteryInfo(); // 지난 이력 가져오기
+	        getLotteryGift();	// 선물 이력 가져오기
 
 	        this.setVisible(true);	 
 	        this.setTitle("환영합니다-----------------!");
@@ -316,10 +323,26 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        this.setResizable(false);	 
 	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	        
 	        
+	        
+	        startInfo();
+			this.getInfo = new Timer( 60000 , new ActionListener(){	//60초마다 한번씩
+	        	public void actionPerformed (ActionEvent e){
+	        		startInfo();
+	        	}
+	        });	
+			getInfo.start();
+	        
+	        
 	    }
 	   
 
 	   public void actionPerformed(ActionEvent e){
+		   
+		   if( !id_chk && e.getSource() != ok_btn ){
+			   JOptionPane.showMessageDialog(null, "닉네임을 등록하세요.");
+			   return;
+		   }
+		   
 		   
 		   if( e.getSource() == ok_btn ){ //별칭 확인 버튼
 			   id_creat();
@@ -402,13 +425,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			   
 
 		   }else if( e.getSource() == gift_btn) {
-			   f_gift = new GiftPanel( nick_name.getText() );
+			   f_gift = new GiftPanel( nick_name.getText() , this.id );
 			   f_gift.addWindowListener(new WindowAdapter() {
-
-				   public void windowClosed(WindowEvent we) {
-					   // 종료시 이벤트
-					    System.out.println(we.getSource());
-					  }
+				   public void windowClosed(WindowEvent we) {	//종료됨 이벤트					   
+					   getLotteryGift();	//
+				   }
 			   	}
 			   
 			   );
@@ -491,11 +512,12 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			} catch (Exception e){
 				System.err.println(e.toString());
 			}
-			String txt[] = new String[4];
+			String txt[] = new String[5];
 			txt[0] = "";
 			txt[1] = "";
 			txt[2] = "";
 			txt[3] = "";
+			txt[4] = "";
 			try {
 				JsonParser Parser = new JsonParser();
 				JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());				
@@ -503,6 +525,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 				txt[1] = jsonObj.get("id").toString().replace("\"", "");
 				txt[2] = jsonObj.get("title").toString().replace("\"", "");
 				txt[3] = jsonObj.get("d_day").toString().replace("\"", "");				
+				txt[4] = jsonObj.get("auto").toString().replace("\"", "");
 			} catch (Exception e) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "진행중인 회차가 없습니다.");
@@ -684,6 +707,102 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		notice_txt = jsonObj.get("notice").toString().replace("\"", "");
 	}
 	
+	// 선물 내역 보기
+	public void getLotteryGift() {		
+		HashMap hm = new HashMap<String, String>();		
+		hm.put("div"	, "select_lottery_gift" );
+		hm.put("p1"	, nick_name.getText() );	//닉네임
+		hm.put("p2"	, "" );
+		hm.put("p3"	, "" );
+		hm.put("p4"	, "" );
+		hm.put("p5"	, "" );
+		hm.put("p6"	, "" );
+		hm.put("p7"	, "" );
+		hm.put("p8"	, "" );
+		hm.put("p9"	, "" );
+		hm.put("p10", "" );			
+		String url = url_base+"/sql";
+		
+		String temp = sp.postRequest(url , hm);
+		System.out.println("temp : "+temp);
+		JsonParser Parser = new JsonParser();
+		JsonObject jsonObj = (JsonObject) Parser.parse(temp);
+		JsonArray memberArray = (JsonArray) jsonObj.get("list");
+		dtm2.setRowCount(0);
+		for (int i = 0; i < memberArray.size(); i++) {
+			JsonObject object = (JsonObject) memberArray.get(i);
+			String [] ss = new String[9];
+			ss[0] = object.get("c0").toString().replace("\"", "");
+			ss[1] = object.get("c1").toString().replace("\"", "");
+			ss[2] = object.get("c4").toString().replace("\"", "");
+			ss[3] = object.get("c5").toString().replace("\"", "");
+			ss[4] = object.get("c6").toString().replace("\"", "");
+			ss[5] = object.get("c15").toString().replace("\"", "");
+			ss[6] = object.get("c16").toString().replace("\"", "");
+			ss[7] = object.get("c17").toString().replace("\"", "");
+			ss[8] = object.get("c2").toString().replace("\"", "");
+			
+			dtm2.addRow(ss);
+		}
+	}	
+	
+	public void startInfo(){
+		StringBuilder sb = new StringBuilder();
+			try {
+				URL url = new URL(url_base+"/thislottery");
+				HttpURLConnection con = (HttpURLConnection) url.openConnection();
+				con.setConnectTimeout(5000); //서버에 연결되는 Timeout 시간 설정
+				con.setReadTimeout(5000); // InputStream 읽어 오는 Timeout 시간 설정
+				con.setRequestMethod("POST");
+				//json으로 message를 전달하고자 할 때 
+				con.setRequestProperty("Content-Type", "application/json");
+				con.setDoInput(true);
+				con.setDoOutput(true); //POST 데이터를 OutputStream으로 넘겨 주겠다는 설정 
+				con.setUseCaches(false);
+				con.setDefaultUseCaches(false);
+
+				OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+				wr.write(""); //json 형식의 message 전달 
+				wr.flush();				
+				if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+					//Stream을 처리해줘야 하는 귀찮음이 있음.
+					BufferedReader br = new BufferedReader(
+							new InputStreamReader(con.getInputStream(), "utf-8"));
+					String line;
+					while ((line = br.readLine()) != null) {
+						sb.append(line).append("\n");
+					}
+					br.close();
+					System.out.println("" + sb.toString());
+				} else {
+					System.out.println(con.getResponseMessage());
+				}
+			} catch (Exception ee){
+				System.err.println(ee.toString());
+			}
+			String txt[] = new String[5];
+			txt[0] = "";
+			txt[1] = "";
+			txt[2] = "";
+			txt[3] = "";
+			txt[4] = "";
+			try {
+				JsonParser Parser = new JsonParser();
+				JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());				
+				txt[0] = jsonObj.get("txt").toString().replace("\"", "");
+				txt[1] = jsonObj.get("id").toString().replace("\"", "");
+				txt[2] = jsonObj.get("title").toString().replace("\"", "");
+				txt[3] = jsonObj.get("d_day").toString().replace("\"", "");				
+				txt[4] = jsonObj.get("auto").toString().replace("\"", "");
+			} catch (Exception ee) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, "진행중인 회차가 없습니다.");
+			}
+			if( txt[4].equals("y") ){
+				fullAuto.setEnabled(true);	   				
+			}
+		
+	}
 
 
 

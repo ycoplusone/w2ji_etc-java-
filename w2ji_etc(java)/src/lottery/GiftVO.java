@@ -12,7 +12,14 @@ public class GiftVO {
 	private String photo_etc = "";
 	private String amt ="";
 	private String prodct="";
+	private String info_id="";
 	
+	public String getInfo_id() {
+		return info_id;
+	}
+	public void setInfo_id(String info_id) {
+		this.info_id = info_id;
+	}
 	public String getAmt() {
 		return amt;
 	}

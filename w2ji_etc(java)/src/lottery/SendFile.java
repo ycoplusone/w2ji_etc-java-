@@ -143,6 +143,7 @@ public class SendFile {
 		    writer.append("Content-Disposition: form-data; name=\"photo_etc\"").append(CRLF);
 		    writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
 		    writer.append(CRLF).append( gvo.getPhoto_etc() ).append(CRLF).flush();
+		    
 		    writer.append("--" + boundary).append(CRLF);
 		    writer.append("Content-Disposition: form-data; name=\"amt\"").append(CRLF);
 		    writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
@@ -151,7 +152,17 @@ public class SendFile {
 		    writer.append("--" + boundary).append(CRLF);
 		    writer.append("Content-Disposition: form-data; name=\"prodct\"").append(CRLF);
 		    writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-		    writer.append(CRLF).append( gvo.getProdct() ).append(CRLF).flush();		    
+		    writer.append(CRLF).append( gvo.getProdct() ).append(CRLF).flush();
+		    
+		    writer.append("--" + boundary).append(CRLF);
+		    writer.append("Content-Disposition: form-data; name=\"info_id\"").append(CRLF);
+		    writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+		    writer.append(CRLF).append( gvo.getInfo_id() ).append(CRLF).flush();
+		    
+		    writer.append("--" + boundary).append(CRLF);
+		    writer.append("Content-Disposition: form-data; name=\"endpoint\"").append(CRLF);
+		    writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+		    writer.append(CRLF).append( "endpoint" ).append(CRLF).flush();
 		    
 		    if( file0 != null ) {
 		    	writer.append("--" + boundary).append(CRLF);
