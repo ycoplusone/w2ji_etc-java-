@@ -93,6 +93,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     
     String id = "";
     String d_day = "";
+    String use_yn = "";
     
     Boolean id_chk = false; //정상 아이디 체크 
     
@@ -101,7 +102,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
     DefaultTableModel dtm = new DefaultTableModel(data,column){ public boolean isCellEditable(int i, int c){ return false; } };
     
     String data1[][]= {};			  
-    String column1[]={"번호","회차"};     
+    String column1[]={"번호","회차","마감여부"};     
     DefaultTableModel dtm1 = new DefaultTableModel(data1 , column1){ public boolean isCellEditable(int i, int c){ return false; } };
     
     String data2[][]= {};			  
@@ -143,7 +144,8 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        String aa[] = getLotteryInfo();
 	        this.id = aa[1]; // 이번 회차 id값
-	        d_day = aa[3]; // 마감일자.
+	        this.d_day = aa[3]; // 마감일자.
+	        this.use_yn = aa[5];
 	        lab2.setText(   aa[0] );	        
 	        
 	        JTextField lab5 = new JTextField("선물한 내역 보기");
@@ -272,6 +274,11 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		  JTable jt1=new JTable( dtm1 );
 		  jt1.getColumnModel().getColumn(0).setMaxWidth(40);
 		  jt1.getColumnModel().getColumn(1).setMaxWidth(310);
+		  jt1.getColumnModel().getColumn(2).setMinWidth(0);
+		  jt1.getColumnModel().getColumn(2).setMaxWidth(0);		  
+		  jt1.getColumnModel().getColumn(2).setWidth(0);
+		  
+		  
 		  dtm1.fireTableDataChanged();
 		  JScrollPane jsp1 = new JScrollPane(jt1);
 		  jsp1.setBounds(380,140,350,270);	// x , y , w , h
@@ -283,15 +290,13 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			    	int row = jt1.getSelectedRow();
 					 Object value0 = jt1.getValueAt(row, 0);
 					 Object value1 = jt1.getValueAt(row, 1);
-					 System.out.println(value0+" : "+value1);
 					 getMyLotteryNumber( value0.toString() , nick_name.getText() );
+					 
 					 lab3.setText(value1.toString());
 			    }
 			});
 		  
 		  this.add(jsp1);
-		          
-	
 	        
 	        
 	        this.add(nick_lab);
@@ -334,6 +339,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	        
 	        
 	    }
+
 	   
 
 	   public void actionPerformed(ActionEvent e){
@@ -373,7 +379,9 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		   }else if( e.getSource() == getMyNumber ){			   
 		   }else if( e.getSource() == setMyNumber ){
 			   Boolean chk = checkNumber( num1.getText() , num2.getText() , num3.getText() , num4.getText() , num5.getText() , num6.getText()  );
-			   if(chk ==true && id_chk == true ) {
+			   System.out.println("use_yn : "+use_yn);
+			   
+			   if(chk ==true && id_chk == true && this.use_yn.equals("y") ) {
 				   JOptionPane.showMessageDialog(null, "등록되었습니다.");
 					HashMap hm = new HashMap<String, String>();
 					hm.put("id"		, id);
@@ -407,8 +415,8 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 					num6.setText("");	
 					lab3.setText("이번 회차 나의 등록번호");
 
-			   }else {
-				   
+			   }else if( !this.use_yn.equals("y") ) {
+				   JOptionPane.showMessageDialog(null, "마감된 회차 입니다.");
 			   }
 			   
 		   }else if( e.getSource() == notice_btn ){
@@ -512,12 +520,13 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 			} catch (Exception e){
 				System.err.println(e.toString());
 			}
-			String txt[] = new String[5];
+			String txt[] = new String[6];
 			txt[0] = "";
 			txt[1] = "";
 			txt[2] = "";
 			txt[3] = "";
 			txt[4] = "";
+			txt[5] = "";
 			try {
 				JsonParser Parser = new JsonParser();
 				JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());				
@@ -526,6 +535,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 				txt[2] = jsonObj.get("title").toString().replace("\"", "");
 				txt[3] = jsonObj.get("d_day").toString().replace("\"", "");				
 				txt[4] = jsonObj.get("auto").toString().replace("\"", "");
+				txt[5] = jsonObj.get("use_yn").toString().replace("\"", "");
 			} catch (Exception e) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "진행중인 회차가 없습니다.");
@@ -691,7 +701,6 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	public void getPastLotteryInfo() {		
 		HashMap hm = new HashMap<String, String>();
 		String url = url_base+"/pastlottery";
-		//String test = postRequest(url , hm);
 		String temp = sp.postRequest(url , hm);
 		JsonParser Parser = new JsonParser();
 		JsonObject jsonObj = (JsonObject) Parser.parse(temp);
@@ -699,9 +708,10 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		dtm1.setRowCount(0);
 		for (int i = 0; i < memberArray.size(); i++) {
 			JsonObject object = (JsonObject) memberArray.get(i);
-			String [] ss = new String[2];
+			String [] ss = new String[3];
 			ss[0] = object.get("id").toString().replace("\"", "");
 			ss[1] = object.get("txt").toString().replace("\"", "");
+			ss[2] = object.get("use_yn").toString().replace("\"", "");
 			dtm1.addRow(ss);
 		}
 		notice_txt = jsonObj.get("notice").toString().replace("\"", "");
@@ -712,7 +722,7 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 		HashMap hm = new HashMap<String, String>();		
 		hm.put("div"	, "select_lottery_gift" );
 		hm.put("p1"	, nick_name.getText() );	//닉네임
-		hm.put("p2"	, "" );
+		hm.put("p2"	, "test" ); //info_id
 		hm.put("p3"	, "" );
 		hm.put("p4"	, "" );
 		hm.put("p5"	, "" );
@@ -748,56 +758,31 @@ public class LotteryMain extends JFrame  implements ActionListener , KeyListener
 	
 	public void startInfo(){
 		StringBuilder sb = new StringBuilder();
-			try {
-				URL url = new URL(url_base+"/thislottery");
-				HttpURLConnection con = (HttpURLConnection) url.openConnection();
-				con.setConnectTimeout(5000); //서버에 연결되는 Timeout 시간 설정
-				con.setReadTimeout(5000); // InputStream 읽어 오는 Timeout 시간 설정
-				con.setRequestMethod("POST");
-				//json으로 message를 전달하고자 할 때 
-				con.setRequestProperty("Content-Type", "application/json");
-				con.setDoInput(true);
-				con.setDoOutput(true); //POST 데이터를 OutputStream으로 넘겨 주겠다는 설정 
-				con.setUseCaches(false);
-				con.setDefaultUseCaches(false);
-
-				OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-				wr.write(""); //json 형식의 message 전달 
-				wr.flush();				
-				if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-					//Stream을 처리해줘야 하는 귀찮음이 있음.
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader(con.getInputStream(), "utf-8"));
-					String line;
-					while ((line = br.readLine()) != null) {
-						sb.append(line).append("\n");
-					}
-					br.close();
-					System.out.println("" + sb.toString());
-				} else {
-					System.out.println(con.getResponseMessage());
-				}
-			} catch (Exception ee){
-				System.err.println(ee.toString());
-			}
-			String txt[] = new String[5];
-			txt[0] = "";
-			txt[1] = "";
-			txt[2] = "";
-			txt[3] = "";
-			txt[4] = "";
-			try {
+			
+				HashMap hm = new HashMap<String, String>();
+				String url = url_base+"/thislottery";
+				hm.put("nickname", nick_name.getText() );
+				String temp = sp.postRequest(url , hm);
+				System.out.println("start info : "+temp);
+				
+				
+				String txt[] = new String[6];
+				txt[0] = "";
+				txt[1] = "";
+				txt[2] = "";
+				txt[3] = "";
+				txt[4] = "";
+				txt[5] = "";
+			
 				JsonParser Parser = new JsonParser();
-				JsonObject jsonObj = (JsonObject) Parser.parse(sb.toString());				
+				JsonObject jsonObj = (JsonObject) Parser.parse(temp);				
 				txt[0] = jsonObj.get("txt").toString().replace("\"", "");
 				txt[1] = jsonObj.get("id").toString().replace("\"", "");
 				txt[2] = jsonObj.get("title").toString().replace("\"", "");
 				txt[3] = jsonObj.get("d_day").toString().replace("\"", "");				
 				txt[4] = jsonObj.get("auto").toString().replace("\"", "");
-			} catch (Exception ee) {
-				// TODO: handle exception
-				JOptionPane.showMessageDialog(null, "진행중인 회차가 없습니다.");
-			}
+				txt[5] = jsonObj.get("use_yn").toString().replace("\"", "");
+
 			if( txt[4].equals("y") ){
 				fullAuto.setEnabled(true);	   				
 			}
