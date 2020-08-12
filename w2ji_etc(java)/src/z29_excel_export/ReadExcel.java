@@ -57,9 +57,12 @@ public class ReadExcel {
 	                	for(col_index = 0; col_index <= cells ; col_index++){
 	                		XSSFCell cell=row.getCell(col_index);
 	                		String value="";
+	                		
 	                		if(cell == null) {                			
 	                			continue;
 	                		}else {
+	                			
+	                			
 	                			switch( cell.getCellType() ){
 		                            case XSSFCell.CELL_TYPE_FORMULA:
 		                                value=cell.getCellFormula();
@@ -80,8 +83,9 @@ public class ReadExcel {
 	                			
 	                		}
 	                		
-	                		DecimalFormat formatter = new DecimalFormat("#,###,###");
+	                		System.out.println("value : "+value);
 	                		
+	                		DecimalFormat formatter = new DecimalFormat("#,###,###");	                		
 	                		if(col_index == 0) {
 	                			double tmp = Double.parseDouble(value);
 	                			String v = Integer.toString( (int)tmp );
@@ -102,14 +106,17 @@ public class ReadExcel {
 	                		}else if( col_index == 3 ) {
 	                			bv.setCompany(value);
 	                		}else if( col_index == 4 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);                			
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
 	                			bv.setCost_amt(v);
 	                		}else if( col_index == 5 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
 	                			bv.setSale_amt(v);
 	                		}else if( col_index == 6 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );                			
 	                			bv.setList_amt( v );
@@ -118,10 +125,14 @@ public class ReadExcel {
 	                		}else if( col_index == 17 ) {
 	                			bv.setPub_date(value);
 	                		}
-	                		bv.setFile_name(ff.getName());
+	                		bv.setFile_name( ff.getName() );
 	                		                		
 	                		//System.out.println(row_index+"번 행 : "+col_index+"번 열 값은: "+value);
+	                		
+	                		
 	                	}
+	                	
+	                	
 	                	
 	                	if( bv.getSeq() != null ) {
 	                		lists.add(bv);
@@ -143,7 +154,7 @@ public class ReadExcel {
 		        
 		        
 			}catch (Exception e) {
-				System.out.println("ReadExcel : "+e.getMessage());
+				System.out.println("exception ReadExcel : "+e.getMessage());
 			}
 			
 		}
