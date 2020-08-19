@@ -127,14 +127,14 @@ public class ExportImage extends JPanel{
 					
 					g.drawImage( bi_he , 0, 0, null);
 					g.drawImage( bi_de , 0, bi_he.getHeight()+30, null);				
-					ImageIO.write(base, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bb.getIsbn()+".jpg"));
+					ImageIO.write(base, "png", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bb.getIsbn()+".png"));
 				}		
 				
 							
 				
 			}
 			
-			//삭제 루틴
+			//삭제 루틴			
 			for( File f : new File("c:\\mk_book_list\\"+currentDate).listFiles() ) {
 				System.out.println(f.getName()+" : "+  f.getName().substring(0, 2) );
 				if( f.getName().substring(0, 2).equals("he") || f.getName().substring(0, 2).equals("de") ){
@@ -184,7 +184,7 @@ public class ExportImage extends JPanel{
 			graphics.drawImage(head, 0, 0, null);
 			graphics.drawImage(detail, 0, 394, null);
 
-			ImageIO.write(_temp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bv.getIsbn()+".jpg"));
+			ImageIO.write(_temp, "png", new File("c:\\mk_book_list\\"+currentDate+"\\d"+bv.getIsbn()+".png"));
 			
 			
 		} catch (Exception e) {			
@@ -280,7 +280,7 @@ public class ExportImage extends JPanel{
 				
 			}
 			for(int i=0; _tmp.size() > i ; i++){
-				ImageIO.write( base , "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\he"+_tmp.get(i).getIsbn()+".jpg"));
+				ImageIO.write( base , "png", new File("c:\\mk_book_list\\"+currentDate+"\\he"+_tmp.get(i).getIsbn()+".png"));
 			}
 			
 			
@@ -345,7 +345,7 @@ public class ExportImage extends JPanel{
 			
 			graphics.drawImage(resizeImage1 , 20 , 95 , null);
 			
-			ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\he"+bv.getIsbn()+".jpg"));
+			ImageIO.write(_bi, "png", new File("c:\\mk_book_list\\"+currentDate+"\\he"+bv.getIsbn()+".png"));
 			
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -405,7 +405,7 @@ public class ExportImage extends JPanel{
 			graphics.drawImage(resizeImage1[8] , 380 , 406 , null);
 			
 			for(int i=0; _tmp.size() > i ; i++){
-				ImageIO.write(_bi, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\t"+_tmp.get(i).getIsbn()+".jpg"));
+				ImageIO.write(_bi, "png", new File("c:\\mk_book_list\\"+currentDate+"\\t"+_tmp.get(i).getIsbn()+".png"));
 			}
 			
 		} catch (Exception e) {			
@@ -483,7 +483,7 @@ public class ExportImage extends JPanel{
 				cur_height += _t.getHeight();
 			}
 			for(int i=0; _tmp.size() > i ; i++){
-				ImageIO.write(__tmp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\de"+_tmp.get(i).getIsbn()+".jpg"));
+				ImageIO.write(__tmp, "png", new File("c:\\mk_book_list\\"+currentDate+"\\de"+_tmp.get(i).getIsbn()+".png"));
 			}
 			//ImageIO.write(__tmp, "jpg", new File("c:\\mk_book_list\\"+currentDate+"\\de"+".jpg"));
 			

@@ -102,14 +102,17 @@ public class ReadExcel {
 	                		}else if( col_index == 3 ) {
 	                			bv.setCompany(value);
 	                		}else if( col_index == 4 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);                			
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
 	                			bv.setCost_amt(v);
 	                		}else if( col_index == 5 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );
 	                			bv.setSale_amt(v);
 	                		}else if( col_index == 6 ) {
+	                			value = value.equals("false")?"0":value;
 	                			double tmp = Double.parseDouble(value);
 	                			String v = formatter.format( (int)tmp );//Integer.toString( (int)tmp );                			
 	                			bv.setList_amt( v );
