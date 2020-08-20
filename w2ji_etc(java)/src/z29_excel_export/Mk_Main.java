@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 public class Mk_Main {
 
 	public static void main(String[] args) {
+		/*
 		System.out.println("mk start");
 		CreateFlod cf = new CreateFlod();			// 폴더 생성 클레스
 		String dir_img = "c:\\mk_book_list\\img";
@@ -26,17 +27,12 @@ public class Mk_Main {
 		
 		ReadExcel re = new ReadExcel();
 		List<BookVo> lb = re.Read("c:\\mk_book_list\\");
-		
+		*/
 			
-		//ExportExcel ee = new ExportExcel( lb ); 사용안함.
-		ExportImage ei = new ExportImage(  lb , dir_img);
+
+		ExportImage ei = new ExportImage();
 		ei.MakeImage();
 		//ei.Test();
-		
-		
-		
-		
-		System.out.println("mk end");
 	}
 
 }
