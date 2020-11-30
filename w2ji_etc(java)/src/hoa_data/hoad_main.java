@@ -25,63 +25,15 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-public class WordParserTest {
+public class hoad_main {
 	public static void main(String[] args) { //main start
 		String file_str = "C:\\Users\\DLIVE\\git\\w2ji_etc-java-\\w2ji_etc(java)\\src\\hoa_data\\Hoa_data_2011.txt";
 		readText(file_str);
 		
-		/*
-		try {
-			
-			
-
-		}catch(Exception e) {
-			System.out.println("e"+e.toString());
-		}*/
+		
 		
 	}// main end
 	
-	/*
-	public static void readDocFile(String fileName) {
-
-		try {
-			File file = new File(fileName);
-			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-			
-			HWPFDocument doc = new HWPFDocument(fis);
-			WordExtractor we = new WordExtractor(doc);
-			String[] paragraphs = we.getParagraphText();
-			
-			System.out.println("Total no of paragraph "+paragraphs.length);
-			for (String para : paragraphs) {
-				System.out.println(para.toString());
-			}
-			fis.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-	
-	public static void readDocxFile(String fileName) {
-
-		try {
-			File file = new File(fileName);
-			FileInputStream fis = new FileInputStream(file.getAbsolutePath());
-
-			XWPFDocument document = new XWPFDocument(fis);
-
-			List<XWPFParagraph> paragraphs = document.getParagraphs();
-			
-			System.out.println("Total no of paragraph "+paragraphs.size());
-			for (XWPFParagraph para : paragraphs) {
-				System.out.println(para.getText());
-			}
-			fis.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
 	
 	public static void readText(String fileName) {
 		try{
