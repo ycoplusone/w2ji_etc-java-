@@ -12,7 +12,8 @@ public class Main {
 	public static void main(String[] args) {
 		//new Monster();
 		//Util.getRecord();
-		MainPanel mp = new MainPanel();
+		new MainPanel();
+		//new PlayerPanel(1000);
 	}
 
 }

@@ -1,6 +1,7 @@
 package monster;
 import javax.swing.*;
 
+import lottery.IntegerDocument;
 
 import java.awt.event.*;
 import java.io.File;
@@ -11,19 +12,22 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.awt.*;
 
-public class Monster extends JFrame {	
+public class Monster {	
 	// 아바타로 사용할 문자열은 "@", 괴물로 사용할 문자열은 "M", 종료키는 'q', 괴물은 200ms 주기로 움직인다
-	private JPanel gamePanel = new GamePanel("@", "#", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.
+	private JPanel gamePanel = new GamePanel("@", "M", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.
+	
+	JFrame jf = new JFrame();
 
 	public Monster() {
-		setTitle("Monster");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setTitle("Monster");
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setContentPane(gamePanel); // GamePanel을 컨텐트팬으로 사용한다.
+		jf.setContentPane(gamePanel); // GamePanel을 컨텐트팬으로 사용한다.
 	
-		setSize(300,300);
-		setVisible(true);
-		setLocationRelativeTo(null);
+		
+		jf.setSize(300,300);
+		jf.setVisible(true);
+		jf.setLocationRelativeTo(null);
 
 		gamePanel.setFocusable(true);		
 		gamePanel.requestFocus(); // GamePanel이 키를 입력받을 수 있도록 포커스를 설정한다.
@@ -31,6 +35,10 @@ public class Monster extends JFrame {
 
 	// 게임이 진행되는 패널. 배치관리자를 null로 설정
 	class GamePanel extends JPanel {
+		
+		private JLabel jl;	// 점수판		
+		
+		
 		private String avatarChar;
 		private String monsterChar;
 		private char quitChar;
@@ -44,6 +52,14 @@ public class Monster extends JFrame {
 			this.monsterChar = monsterChar;
 			this.quitChar = quitChar;
 			this.monsterDelay = monsterDelay;
+			
+			
+			jl = new JLabel();
+			jl.setBounds(10, 10, 280, 25); // x , y , w , h
+			jl.setHorizontalAlignment(JTextField.CENTER);
+			jl.setText("ㄹㄹㄹ");
+			this.add(jl);
+			
 			
 			// 아바타와 괴물 레이블 생성
 			avatar = new JLabel(avatarChar); 
@@ -64,7 +80,7 @@ public class Monster extends JFrame {
 			add(monster);
 			
 			// 괴물을 움직이는 스레드 생성 및 시작 
-			MonsterThread th = new MonsterThread(monster, avatar, monsterDelay);
+			MonsterThread th = new MonsterThread(monster, avatar, monsterDelay, jl);
 			th.start();
 			
 			// 이 패널을 마우스로 클릭하면 강제로 포커스를 이 패널로 가져와서 키 입력을 처리할 수 있게 한다.
@@ -117,11 +133,16 @@ public class Monster extends JFrame {
 		private JLabel to; // 도망가는 레이블. 아바타 레이블
 		private long monsterDelay;
 		private final int MONSTER_MOVE = 5; // from 레이블이 한번에 이동하는 거리
+		private JLabel jjl;
 		
-		public MonsterThread(JLabel from, JLabel to, long monsterDelay) {
+		private int life = 3; // 남은 생명
+		private int point = 0; //점수
+		
+		public MonsterThread(JLabel from, JLabel to, long monsterDelay , JLabel jl) {
 			this.from = from;
 			this.to = to;
 			this.monsterDelay = monsterDelay;
+			this.jjl = jl;
 		}
 		
 		@Override
@@ -146,12 +167,31 @@ public class Monster extends JFrame {
 				System.out.println("from : "++" : "+from.getY());*/
 				int xx = Math.abs(to.getX() - from.getX());
 				int yy = Math.abs(to.getY() - from.getY());
-				if( xx <= 5 && yy <= 5 ) {
-					JOptionPane.showMessageDialog(null, "잡혀다");
-					return;
-					
-					//System.out.println("to : "+to.getX()+" : "+to.getY());
-					//System.out.println("from : "+from.getX()+" : "+from.getY());
+				
+				point++;
+				jjl.setText("접수 : "+point+" 생명 : "+life);
+				
+				if( xx <= 5 && yy <= 5 ) { //몬스터에게 잡힐경우
+					life--;		//생명을 -1 차감한다.
+					if(life==0){ //생명이 0일경우 게임을 끝낸다.
+						JOptionPane.showMessageDialog(null, "Game Over");
+						PlayerPanel pp = new PlayerPanel(point);
+						
+						pp.addWindowListener(new WindowAdapter() {
+							public void windowClosed(WindowEvent we) {	//종료됨 이벤트
+								System.out.println("게임 화면 종료");
+								//gamePanel.setVisible(false);
+								jf.setVisible(false);
+								
+							}
+						});
+						
+						return;
+					}else{ //생명이 남아있을 경우 알림 창을 보여주고  몬스터와 일정 거리를 벌린후 끝낸다.
+						JOptionPane.showMessageDialog(null, "잡힘\n 생명이( "+life+" ) 남았습니다.");
+						this.to.setLocation(50, 50);
+						this.from.setLocation(150, 150);	
+					}
 				}
 				
 				
