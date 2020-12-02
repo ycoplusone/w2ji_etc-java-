@@ -5,8 +5,8 @@ public class DataModel {
 	private int hhmm; //시 분 데이터
 	private String kind; //종목
 	private String seq_no; //일련번호
-	private String price; //가격
-	private String amount; //수량
+	private int price; //가격
+	private int amount; //수량
 	
 	public void print(){
 		System.out.print( "time : "+this.time );
@@ -41,16 +41,16 @@ public class DataModel {
 	public void setSeq_no(String seq_no) {
 		this.seq_no = seq_no;
 	}
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
-	public String getAmount() {
+	public int getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 	

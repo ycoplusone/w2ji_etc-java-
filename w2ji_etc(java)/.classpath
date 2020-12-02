@@ -2,13 +2,5 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/cos.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/gson-2.8.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/mariadb-java-client-2.6.1-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/mysql-connector-java-5.1.45-bin.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/poi-3.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/poi-ooxml-3.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/poi-ooxml-schemas-3.11.jar"/>
-	<classpathentry kind="lib" path="C:/Users/User/git/w2ji_etc-web-/w2ji_web/WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
