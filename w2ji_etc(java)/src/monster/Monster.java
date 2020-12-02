@@ -13,16 +13,17 @@ import java.awt.*;
 
 public class Monster extends JFrame {	
 	// 아바타로 사용할 문자열은 "@", 괴물로 사용할 문자열은 "M", 종료키는 'q', 괴물은 200ms 주기로 움직인다
-	private JPanel gamePanel = new GamePanel("@", "M", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.
+	private JPanel gamePanel = new GamePanel("@", "#", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.
 
 	public Monster() {
-		setTitle("Open Challenge 13");
+		setTitle("Monster");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setContentPane(gamePanel); // GamePanel을 컨텐트팬으로 사용한다.
 	
 		setSize(300,300);
 		setVisible(true);
+		setLocationRelativeTo(null);
 
 		gamePanel.setFocusable(true);		
 		gamePanel.requestFocus(); // GamePanel이 키를 입력받을 수 있도록 포커스를 설정한다.
@@ -140,6 +141,19 @@ public class Monster extends JFrame {
 				
 				// 괴물의 위치 수정
 				from.setLocation(x, y);
+				/*
+				System.out.println("to : "++" : "+to.getY());
+				System.out.println("from : "++" : "+from.getY());*/
+				int xx = Math.abs(to.getX() - from.getX());
+				int yy = Math.abs(to.getY() - from.getY());
+				if( xx <= 5 && yy <= 5 ) {
+					JOptionPane.showMessageDialog(null, "잡혀다");
+					return;
+					
+					//System.out.println("to : "+to.getX()+" : "+to.getY());
+					//System.out.println("from : "+from.getX()+" : "+from.getY());
+				}
+				
 				
 				// 괴물의 위치가 변경되었기 때문에 괴물을 포함하는 패널을 다시 그리도록 함
 				from.getParent().repaint();

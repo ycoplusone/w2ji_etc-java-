@@ -38,7 +38,7 @@ public class MainPanel  extends JFrame  implements ActionListener {
 		btn1.addActionListener(this);
 		btn1.setBounds(10, 20, 225, 40); // x , y , w , h
         
-		btn2 = new JButton("순위보기");
+		btn2 = new JButton("점수조회");
 		btn2.addActionListener(this);
 		btn2.setBounds(10, 70, 225, 40); // x , y , w , h
 		

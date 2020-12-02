@@ -67,7 +67,7 @@ public class RankingPanel  extends JFrame  implements ActionListener {
         this.add(btn1);
 
         this.setVisible(true);	 
-        this.setTitle("게임하기");
+        this.setTitle("점수조회");
         this.setSize( 250 , 300);	 
         this.setLocationRelativeTo(null);	 
         this.setResizable(false);	 
