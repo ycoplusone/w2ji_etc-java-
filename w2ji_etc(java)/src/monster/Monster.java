@@ -14,17 +14,13 @@ import java.awt.*;
 
 public class Monster {	
 	// 아바타로 사용할 문자열은 "@", 괴물로 사용할 문자열은 "M", 종료키는 'q', 괴물은 200ms 주기로 움직인다
-	private JPanel gamePanel = new GamePanel("@", "M", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.
-	
+	private JPanel gamePanel = new GamePanel("@", "M", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.	
 	JFrame jf = new JFrame();
-
-	public Monster() {
+	public void Monstershow() {
 		jf.setTitle("Monster");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		jf.setContentPane(gamePanel); // GamePanel을 컨텐트팬으로 사용한다.
-	
-		
 		jf.setSize(300,300);
 		jf.setVisible(true);
 		jf.setLocationRelativeTo(null);
@@ -51,15 +47,13 @@ public class Monster {
 			this.avatarChar = avatarChar;
 			this.monsterChar = monsterChar;
 			this.quitChar = quitChar;
-			this.monsterDelay = monsterDelay;
-			
+			this.monsterDelay = monsterDelay;			
 			
 			jl = new JLabel();
 			jl.setBounds(10, 10, 280, 25); // x , y , w , h
 			jl.setHorizontalAlignment(JTextField.CENTER);
 			jl.setText("ㄹㄹㄹ");
-			this.add(jl);
-			
+			this.add(jl);			
 			
 			// 아바타와 괴물 레이블 생성
 			avatar = new JLabel(avatarChar); 
