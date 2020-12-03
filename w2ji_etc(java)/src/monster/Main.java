@@ -25,7 +25,9 @@ public class Main extends JFrame{
 	String name2[]={"게임시작","점수조회"};
     JMenuItem mi2[]=new JMenuItem[2];
    
+    Container c;
     GamePanel gp;
+    
 	private static int currentID =-1;	
 	private ImageIcon [] images = new ImageIcon [3]; // 이미지 객체 배열
 	  
@@ -44,7 +46,7 @@ public class Main extends JFrame{
       setSize(500, 500);
       setResizable(false);
       setLayout(null);
-      Container c = getContentPane();
+      c = getContentPane();
      
       MyPanel mypanel = new MyPanel();  //마이패널 객체 생성
       mypanel.setBounds(50,70,400,300);  //마이패널 사이즈 설정
@@ -135,11 +137,8 @@ public class Main extends JFrame{
             mi2[0].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	System.out.println("시작");
-                	c.removeAll();
-                	c.repaint();
-                	if(gp!=null) {
-                		gp.th.stop();
-                	}               	
+                		
+                		initPanel();// 게임 화면 초기화
                 	
 	                	gp = new GamePanel();
 	                    gp.setBounds(50,70,400,300);  //마이패널 사이즈 설정
@@ -155,7 +154,7 @@ public class Main extends JFrame{
             mi2[1].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	System.out.println("점수");
-                	               	
+                	
         			RankingPanel rp =  new RankingPanel();
         			rp.addWindowListener(new WindowAdapter() {
         				public void windowClosed(WindowEvent we) {	//종료됨 이벤트
@@ -177,6 +176,17 @@ public class Main extends JFrame{
       this.setLocationRelativeTo(null);
       setVisible(true);
          
+   }
+   
+   public void initPanel(){	// 화면 초기화 할 부분
+	   
+	   c.removeAll();
+	   c.repaint();
+	   // 게임 초기화부분
+	   if(gp!=null) {
+		   gp.th.stop();
+   		}
+	   
    }
    
    

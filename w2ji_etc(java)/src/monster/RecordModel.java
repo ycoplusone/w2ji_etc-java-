@@ -1,5 +1,6 @@
 package monster;
 
+// 점수 bean 객체
 public class RecordModel{
 
 	private String name ="";
