@@ -1,3 +1,5 @@
+package monster;
+
 import javax.swing.*;
 //import java.util.InputMismatchException;
 import javax.swing.Timer;
@@ -23,6 +25,7 @@ public class Main extends JFrame{
 	String name2[]={"게임시작","점수조회"};
     JMenuItem mi2[]=new JMenuItem[2];
    
+    GamePanel gp;
 	private static int currentID =-1;	
 	private ImageIcon [] images = new ImageIcon [3]; // 이미지 객체 배열
 	  
@@ -45,6 +48,8 @@ public class Main extends JFrame{
      
       MyPanel mypanel = new MyPanel();  //마이패널 객체 생성
       mypanel.setBounds(50,70,400,300);  //마이패널 사이즈 설정
+      
+      
       
            
       
@@ -130,12 +135,27 @@ public class Main extends JFrame{
             mi2[0].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	System.out.println("시작");
+                	c.removeAll();
+                	c.repaint();
+                	if(gp!=null) {
+                		gp.th.stop();
+                	}               	
+                	
+	                	gp = new GamePanel();
+	                    gp.setBounds(50,70,400,300);  //마이패널 사이즈 설정
+                		c.add(gp);
+                		gp.Game("@", "M", 'q', 200);
+                    	gp.setFocusable(true);		
+                    	gp.requestFocus(); // GamePanel이 키를 입력받을 수 있도록 포커스를 설정한다.
+                	//}                	
+                	
                 }
             });
             
             mi2[1].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	System.out.println("점수");
+                	               	
         			RankingPanel rp =  new RankingPanel();
         			rp.addWindowListener(new WindowAdapter() {
         				public void windowClosed(WindowEvent we) {	//종료됨 이벤트
@@ -147,12 +167,14 @@ public class Main extends JFrame{
   
       
       //마이프레임설정    
-      c.add(mypanel);
+      //c.add(mypanel);
+      //c.add(gp);
       mb.add(jm1);
       mb.add(jm2);
       mb.add(jm3);
       mb.add(jm4);
-      this.setJMenuBar(mb);  
+      this.setJMenuBar(mb);
+      this.setLocationRelativeTo(null);
       setVisible(true);
          
    }
@@ -293,6 +315,7 @@ public class Main extends JFrame{
    
       
 }
+
 
 
 
