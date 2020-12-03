@@ -171,8 +171,7 @@ public class Monster {
 				point++;
 				jjl.setText("접수 : "+point+" 생명 : "+life);
 				
-				if( xx <= 5 && yy <= 5 ) { //몬스터에게 잡힐경우
-					life--;		//생명을 -1 차감한다.
+				if( xx <= 5 && yy <= 5 ) { //몬스터에게 잡힐경우					
 					if(life==0){ //생명이 0일경우 게임을 끝낸다.
 						JOptionPane.showMessageDialog(null, "Game Over");
 						PlayerPanel pp = new PlayerPanel(point);
@@ -192,6 +191,7 @@ public class Monster {
 						this.to.setLocation(50, 50);
 						this.from.setLocation(150, 150);	
 					}
+					life--;		//생명을 -1 차감한다.
 				}
 				
 				
