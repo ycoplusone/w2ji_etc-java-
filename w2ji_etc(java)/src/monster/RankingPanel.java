@@ -27,6 +27,7 @@ import booking.Menuframe;
 import booking.WMember;
 import booking.WordDbConnect;
 
+// 순위 보여주는 코드
 public class RankingPanel  extends JFrame  implements ActionListener {
     JButton btn1;
     

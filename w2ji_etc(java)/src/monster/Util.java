@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 
 import hoa_data.DataModel;
 
-
+// 순위 데이터를 로컬 파일에 저장하고 읽어오기 위한 소스
 public class Util {
 	
 	

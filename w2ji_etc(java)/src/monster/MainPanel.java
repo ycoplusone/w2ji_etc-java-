@@ -25,6 +25,7 @@ import booking.Menuframe;
 import booking.WMember;
 import booking.WordDbConnect;
 
+// 다른 ui 버전
 public class MainPanel  extends JFrame  implements ActionListener {
     JButton btn1;
     JButton btn2;

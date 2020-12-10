@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.awt.*;
 
+// 기존 게임 부분
 public class Monster {	
 	// 아바타로 사용할 문자열은 "@", 괴물로 사용할 문자열은 "M", 종료키는 'q', 괴물은 200ms 주기로 움직인다
 	private JPanel gamePanel = new GamePanel("@", "M", 'q', 200); // 게임 패널, 컨텐트팬으로 사용한다.	

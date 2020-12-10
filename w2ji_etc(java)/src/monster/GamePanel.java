@@ -14,7 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
+<<<<<<< HEAD
 // 게임이 진행되는 패널. 배치관리자를 null로 설정
+=======
+//  기존 Monster.java 에서 JFRame 부분을 제거 한 코드
+>>>>>>> branch 'master' of https://github.com/ycoplusone/w2ji_etc-java-.git
 class GamePanel extends JPanel {
 	
 	private JLabel jl;	// 점수판		
