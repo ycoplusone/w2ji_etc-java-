@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 
-
+// 점수 등록 하는 부분
 public class PlayerPanel  extends JFrame  implements ActionListener {
     JButton btn1;
     
