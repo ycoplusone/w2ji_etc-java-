@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import booking.WordDbConnect;
 
 
 // 로그인 화면
@@ -82,12 +81,21 @@ class Login extends JFrame implements ActionListener {
 			boolean tt =  DBConnect.getLogin(type_List.getSelectedItem()+"", tf2.getText());
 			if(tt) {				
 				JOptionPane.showMessageDialog(null,"로그인되었습니다.");
-				
+				/*
 				MainScreen ms = new MainScreen("MovieCafe" , type_List.getSelectedItem().toString() );
 				ms.setSize(1920, 1020);
 				ms.setLocationRelativeTo(null);
 				ms.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				ms.show();*/
+				
+				Time_remaining tm = new Time_remaining(10);
+				tm.start();
+				MainScreen ms = new MainScreen("MovieCafe" , type_List.getSelectedItem().toString() );
+				ms.setSize(1500, 800);
+				ms.setLocationRelativeTo(null);
+				ms.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				ms.show();
+				
 				
 				this.dispose();				
 			}else {
