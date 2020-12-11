@@ -14,10 +14,17 @@ public class DBConnect {
 	public static Connection getMysql() {
 		Connection con = null;
 		try {
-			String id = "moviecafe";	//db 아이디
+			String id = "root";	//db 아이디
 			String ps = "java2020";		//db 패스워드
-			String db = "moviecafe";	//db 명
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db+"?user="+id+"&password="+ps);
+			String db = "MovieCafe";	//db 명
+			//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+db+"?user="+id+"&password="+ps);
+			String url = "jdbc:mysql://localhost:3306/"+db+"?serverTimezone=UTC";
+			con = DriverManager.getConnection(url , id , ps);
+			/*
+			             Class.forName("com.mysql.cj.jdbc.Driver");
+ 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/MovieCafe?serverTimezone=UTC", "root", "java2020");
+			 * */
+			
 		}catch (Exception e) {
 			System.out.println("class MysqlConnecter error"+e.toString());
 		}
@@ -28,7 +35,7 @@ public class DBConnect {
 	public static boolean getLogin(String id , String ps) {
 		boolean temp = false;		
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = getMysql();			
 			Statement st=con.createStatement();			   
 			String strSql = "select * from usermanagement where user_type = '"+id+"' and password = '"+ps+"'";
@@ -47,7 +54,7 @@ public class DBConnect {
 	public static boolean setChangePassword(String user_type , String now_pass , String new_pass ) {
 		boolean temp = false;
 		 try{
-			 Class.forName("com.mysql.jdbc.Driver");
+			 Class.forName("com.mysql.cj.jdbc.Driver");
 			 Connection con = getMysql();
 			 Statement st=con.createStatement();
 			 String strSql ="UPDATE usermanagement     SET  password='"+new_pass+"'    WHERE user_type='"+user_type+"' and password ='"+now_pass+"'";
@@ -64,7 +71,7 @@ public class DBConnect {
 	// 상품등록
 	public static void setProdAdd(String prod , String price ) {
 		 try{
-			 Class.forName("com.mysql.jdbc.Driver");
+			 Class.forName("com.mysql.cj.jdbc.Driver");
 			 Connection con = getMysql();
 			 Statement st=con.createStatement();
 			 String strSql ="INSERT INTO productmanagement(prod_nm, price, amount, user_yn)  VALUES('"+prod+"', "+price+", 0, 'Y')";
@@ -81,7 +88,7 @@ public class DBConnect {
 	public static ArrayList<String[]> getProdList(){
 		ArrayList al = new ArrayList();
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = getMysql();			
 			Statement st=con.createStatement();			   
 			String strSql = "select prod_cd , prod_nm ,  amount , price  from productmanagement where user_yn = 'Y' " ;		
@@ -110,7 +117,7 @@ public class DBConnect {
 	// 상품 삭제
 	public static void delProd(String prod_cd) {
 		 try{
-			 Class.forName("com.mysql.jdbc.Driver");
+			 Class.forName("com.mysql.cj.jdbc.Driver");
 			 Connection con = getMysql();
 			 Statement st=con.createStatement();
 			 String strSql ="UPDATE productmanagement     SET  user_yn='N'    WHERE  prod_cd = '"+prod_cd+"'";
@@ -124,7 +131,7 @@ public class DBConnect {
 	
 	public static void updateProd(String prod_cd, int in,int out) {
 		 try{
-			 Class.forName("com.mysql.jdbc.Driver");
+			 Class.forName("com.mysql.cj.jdbc.Driver");
 			 Connection con = getMysql();
 			 Statement st=con.createStatement();
 			 String strSql ="UPDATE productmanagement     SET  amount = amount + ("+(in-out)+")    WHERE prod_cd='"+prod_cd+"' ";
@@ -140,7 +147,7 @@ public class DBConnect {
 	//상품 입출고 및 판매 기록
 	public static void setProdHist(String prod_cd, int in,int out ,int price, String type) {	//type (m:입풀고 , s : 판매)
 		 try{
-			 Class.forName("com.mysql.jdbc.Driver");
+			 Class.forName("com.mysql.cj.jdbc.Driver");
 			 Connection con = getMysql();
 			 Statement st=con.createStatement();
 			 String strSql ="INSERT INTO product_hist(prod_cd, type, out_amount, in_amount, price, reg_date) VALUES( '"+prod_cd+"', '"+type+"', "+out+", "+in+", "+price+", now())";
@@ -157,7 +164,7 @@ public class DBConnect {
 	public static ArrayList<String[]> getSaleList(){
 			ArrayList al = new ArrayList();
 			try{
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection con = getMysql();			
 				Statement st=con.createStatement();			   
 				String strSql = "" ;
@@ -195,7 +202,7 @@ public class DBConnect {
 	public static String[] getSaleTotal(){
 		String str[] = new String[2];
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = getMysql();			
 			Statement st=con.createStatement();			   
 			String strSql = "" ;
